@@ -1,0 +1,52 @@
+<html>
+<head>
+<title>Login</title>
+<link rel="stylesheet"
+	href="bower_components/bootstrap/dist/css/bootstrap.min.css" />
+<link rel="stylesheet"
+	href="css/custom.css" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+	
+	<div class="container">
+		<div class="row">
+  			<div class="text-center">
+				<img src="imgs/logo.jpg" class="logo"/>
+			</div>
+		</div>
+		<#if RequestParameters['error']??>
+		<div class="row col-md-12 col-xs-12 col-sm-12">
+			<div class="alert alert-danger">
+				An error occurred during the login process. Try again.
+			</div>
+		</div>
+		</#if>
+		<form class="form-horizontal" role="form" action="login" method="post">
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				Login
+			</div>
+			<div class="panel-body">
+					<div class="form-group col-md-12 col-xs-12 col-sm-12">
+						<label for="username">E-mail</label> 
+						<input type="text"
+							class="form-control" id="username" name="username" value="amoraes@feb.unesp.br" />
+					</div>
+					<div class="form-group col-md-12 col-xs-12 col-sm-12">
+						<label for="password">Password</label> <input type="password"
+							class="form-control" id="password" name="password" value="passwebra" />
+					</div>
+					<div class="row col-md-12 col-xs-12 col-sm-12">
+						<input type="hidden" id="csrf_token" name="${_csrf.parameterName}"
+							value="${_csrf.token}" />
+						<button type="submit" class="btn btn-primary">Go</button>
+					</div>
+				
+			</div>
+		</div>
+		</form>
+	</div>
+	
+</body>
+</html>
