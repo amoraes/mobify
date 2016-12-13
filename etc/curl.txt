@@ -1,0 +1,2 @@
+#get an access_token via password grant
+curl -u mobify:aaa111bbb222ccc333 http://localhost:9999/auth/oauth/token -d 'grant_type=password&username=admin&password=admin123'

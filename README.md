@@ -1,6 +1,6 @@
 # Mobify
 ###About
-Mobify is a open source mobile notification software to send messages in real-time to users' mobile devices.
+Mobify is an open source mobile notification software to send messages in real-time to users' mobile devices.
 
 ###Technologies
 * **Notification server**: RESTful backend using Spring Boot

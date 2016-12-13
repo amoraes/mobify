@@ -1,0 +1,24 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title>Welcome</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding>
+  <h2>Welcome to Mobify!</h2>
+  <ion-list>
+	  <ion-item>
+	    <ion-label floating>Username</ion-label>
+	    <ion-input type="text" [(ngModel)]="username"></ion-input>
+	  </ion-item>
+	  <ion-item>
+	    <ion-label floating>Password</ion-label>
+	    <ion-input type="password" [(ngModel)]="password"></ion-input>
+	  </ion-item>
+	  <ion-item>
+	    <ion-label>Keep me connected</ion-label>
+	    <ion-checkbox [(ngModel)]="reconnect"></ion-checkbox>
+	  </ion-item>
+  </ion-list>
+  <button ion-button full (click)="login($event)">Login</button> 
+</ion-content>

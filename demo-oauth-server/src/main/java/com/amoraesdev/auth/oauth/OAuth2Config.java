@@ -58,9 +58,20 @@ public class OAuth2Config extends AuthorizationServerConfigurerAdapter {
     @Override
     public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
         clients.inMemory()
-        	.withClient("mobify").authorities("CLIENT_MASTER").secret("aaa111bbb222ccc333")
+        	.withClient("mobify")
+        		.authorities("CLIENT_MASTER")
+        		.secret("aaa111bbb222ccc333")
+        		.scopes("openid")
+        		.autoApprove(true)
+        		.authorizedGrantTypes("authorization_code","password")
         	.and()
-        	.withClient("monitor-checker").authorities("CLIENT").secret("aaa111bbb222");
+        	.withClient("monitor-checker")
+        		.authorities("CLIENT")
+        		.secret("aaa111bbb222")
+        		.scopes("openid")
+        		.autoApprove(true)
+        		.autoApprove("openid")
+        		.authorizedGrantTypes("client_credentials");
     }
     
     @Override
