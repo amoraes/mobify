@@ -9,6 +9,10 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.web.access.channel.ChannelProcessingFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
 
 /**
  * Security Configuration (in-memory, use only in development environment)
@@ -32,6 +36,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		http.authorizeRequests()
 		.antMatchers("/login", "/logout", "/oauth/authorize").permitAll();
 		http.authorizeRequests().anyRequest().authenticated();
+		
+		//cors config
+		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        CorsConfiguration config = new CorsConfiguration();
+        config.addAllowedOrigin("*");
+        config.addAllowedHeader("*");
+        source.registerCorsConfiguration("/**", config);
+		http.addFilterBefore(new CorsFilter(source), ChannelProcessingFilter.class);
 	}
 
 	@Override

@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
@@ -14,6 +15,8 @@ import org.springframework.security.oauth2.provider.approval.ApprovalStore;
 import org.springframework.security.oauth2.provider.approval.InMemoryApprovalStore;
 import org.springframework.security.oauth2.provider.code.AuthorizationCodeServices;
 import org.springframework.security.oauth2.provider.code.InMemoryAuthorizationCodeServices;
+import org.springframework.security.oauth2.provider.token.DefaultTokenServices;
+import org.springframework.security.oauth2.provider.token.ResourceServerTokenServices;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.InMemoryTokenStore;
 
@@ -43,6 +46,15 @@ public class OAuth2Config extends AuthorizationServerConfigurerAdapter {
     public AuthorizationCodeServices authorizationCodeServices() {
         return new InMemoryAuthorizationCodeServices();
     }
+    
+    @Bean
+    @Primary
+    public ResourceServerTokenServices resourceServerTokenServices(){
+    	DefaultTokenServices tokenServices = new DefaultTokenServices();
+    	tokenServices.setSupportRefreshToken(true);
+    	tokenServices.setTokenStore(tokenStore());
+    	return tokenServices;
+    }
 
     @Override
     public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
@@ -63,7 +75,7 @@ public class OAuth2Config extends AuthorizationServerConfigurerAdapter {
         		.secret("aaa111bbb222ccc333")
         		.scopes("openid")
         		.autoApprove(true)
-        		.authorizedGrantTypes("authorization_code","password")
+        		.authorizedGrantTypes("authorization_code","password","refresh_token","client_credentials")
         	.and()
         	.withClient("monitor-checker")
         		.authorities("CLIENT")
@@ -71,7 +83,7 @@ public class OAuth2Config extends AuthorizationServerConfigurerAdapter {
         		.scopes("openid")
         		.autoApprove(true)
         		.autoApprove("openid")
-        		.authorizedGrantTypes("client_credentials");
+        		.authorizedGrantTypes("authorization_code","password","refresh_token","client_credentials");
     }
     
     @Override

@@ -13,16 +13,22 @@ export class LoginPage {
   
   private $authService:AuthService;
   
-  private username:string;
-  private password:string;
-  private reconnect:boolean;
+  public username:string = 'admin';
+  public password:string = 'admin123';
   
   constructor(public navCtrl:NavController, private authService:AuthService) {
      this.$authService = authService;
   }
   
   login(event){
-    this.$authService.login(this.username, this.password, this.reconnect); 
+      this.$authService.login(this.username, this.password)
+        .then(data => {
+          if(data == true){
+            console.log('User logged in');
+          }else{
+            console.log('Wrong username or password');
+          }
+        });
   }
 
 }
