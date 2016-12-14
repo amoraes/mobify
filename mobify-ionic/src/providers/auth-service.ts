@@ -2,7 +2,9 @@ import { Injectable } from '@angular/core';
 import { Http, Headers } from '@angular/http';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/toPromise';
+
 import { BasicService } from './basic-service';
+
 import { User } from '../model/user';
 
 import { CONFIG } from '../app/config';
@@ -66,7 +68,7 @@ export class AuthService extends BasicService {
               res => {
                 if(res.status == 200){
                   console.log(res.json());
-                  user = res.json().name;
+                  user.username = res.json().name;
                   this.user = user;
                   return true;
                 }else{

@@ -3,10 +3,12 @@ import { Platform } from 'ionic-angular';
 import { StatusBar, Splashscreen } from 'ionic-native';
 
 import { LoginPage } from '../pages/login/login';
-
+//global services
+import { AuthService } from '../providers/auth-service';
 
 @Component({
-  templateUrl: 'app.html'
+  templateUrl: 'app.html',
+  providers: [AuthService] 
 })
 export class MyApp {
   rootPage = LoginPage;
