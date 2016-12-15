@@ -71,7 +71,7 @@ public class OAuth2Config extends AuthorizationServerConfigurerAdapter {
     public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
         clients.inMemory()
         	.withClient("mobify")
-        		.authorities("CLIENT_MASTER")
+        		.authorities("CLIENT","CLIENT_MASTER")
         		.secret("aaa111bbb222ccc333")
         		.scopes("openid")
         		.autoApprove(true)
