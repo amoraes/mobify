@@ -3,7 +3,7 @@
 Mobify is an open source mobile notification software to send messages in real-time to users' mobile devices.
 
 ###Status
-Work in progress. I intend to have a working version with a online demo by the end of January 2017.
+Work in progress. I intend to have a working version with an online demo by the end of January 2017.
 
 ###Modules
 * **mobify-server**: RESTful backend using Spring Boot
