@@ -28,7 +28,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 /**
- * ControllerAdvice to generate error codes more appropriate
+ * ControllerAdvice to generate error codes in a more appropriate way
  * @author Alessandro Moraes (alessandro at amoraesdev.com)
  */
 @ControllerAdvice
@@ -66,7 +66,7 @@ public class RestErrorsControllerAdvice extends ResponseEntityExceptionHandler
 		log.debug("Handling "+ex.getClass().getSimpleName()+":"+ex.getMessage());
 		ErrorResource error = new ErrorResource();
         error.setCode(ex.getClass().getSimpleName());
-        error.setMessage(messageSource.getMessage(ex.getMessage(), null, null));
+        error.setMessage(messageSource.getMessage(ex.getMessage(), null, Constants.DEFAULT_API_LOCALE));
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(Constants.APPLICATION_JSON_UTF8);
         return ResponseEntity.badRequest().headers(headers).body(error);

@@ -4,10 +4,13 @@ import java.io.Serializable;
 
 import javax.validation.constraints.NotNull;
 
+import com.fasterxml.jackson.annotation.JsonTypeName;
+
 /**
  * Value Object to represent a new Notification posted by a client application
  * @author Alessandro Moraes (alessandro at amoraesdev.com)
  */
+@JsonTypeName("Notification")
 public class NotificationPostVO implements Serializable {
 
 	private static final long serialVersionUID = 6451739421647418433L;
@@ -29,7 +32,7 @@ public class NotificationPostVO implements Serializable {
 	public String[] getUsernames() {
 		return usernames;
 	}
-	public void setUsernames(String[] usernames) {
+	public void setUsernames(String... usernames) {
 		this.usernames = usernames;
 	}
 	public String getType() {
