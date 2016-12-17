@@ -36,7 +36,7 @@ public class NotificationsResourceTests {
 	/**
 	 * Base url for every call on this resource
 	 */
-	private final String BASE_URL = "/api/v1/notifications";
+	private final String BASE_URL = NotificationsResource.BASE_URL;
 	
 	@Mock
 	private AuthorizationHelper authorizationHelper;
@@ -74,13 +74,12 @@ public class NotificationsResourceTests {
 	}
 	
 	/**
-	 * post as regular user: 
+	 * post as a regular user: 
 	 * verify if the notification is correctly inserted in the database and sent to the users
 	 */	
 	@Test
 	public void testPostAsRegularUser() throws Exception{
 		NotificationPostVO postVO = new NotificationPostVO();
-		postVO.setApplicationId("my-client-id");
 		postVO.setMessage("This is a test message");
 		postVO.setType("Alert");
 		postVO.setUsernames("amoraes", "sanfatec");
@@ -94,7 +93,7 @@ public class NotificationsResourceTests {
 		when(applicationRepository.findByApplicationId("my-client-id")).thenReturn(application);
 		
 		this.mockMvc
-			.perform(post(BASE_URL)
+			.perform(post(BASE_URL, "my-client-id")
 					.contentType(Constants.APPLICATION_JSON_UTF8)
 					.content(convertObjectToJsonBytes(postVO))	
 					)
@@ -104,34 +103,35 @@ public class NotificationsResourceTests {
 		verify(senderService, times(2)).sendNotification(Matchers.<Notification>any());
 	}
 	
+	
 	/**
-	 * post as regular user without application id (the default is the client id): 
-	 * verify if the notification is correctly inserted in the database and sent to the users
+	 * post as a master user (master users can send notifications in the behalf of any other): 
+	 * verify if the notification is correctly inserted in the database and sent to the user
 	 */	
 	@Test
-	public void testPostAsRegularUserWithoutApplicationId() throws Exception{
+	public void testPostAsMasterUser() throws Exception{
 		NotificationPostVO postVO = new NotificationPostVO();
 		postVO.setMessage("This is a test message");
 		postVO.setType("Alert");
-		postVO.setUsernames("amoraes", "sanfatec");
+		postVO.setUsernames("amoraes");
 		
 		Application application = new Application();
 		application.setApplicationId("my-client-id");
 		application.setName("My App");
-			
-		when(authorizationHelper.hasRole(ROLE_MASTER)).thenReturn(false);
+		
+		when(authorizationHelper.hasRole(ROLE_MASTER)).thenReturn(true);
 		when(authorizationHelper.getClientId()).thenReturn("my-client-id");
 		when(applicationRepository.findByApplicationId("my-client-id")).thenReturn(application);
 		
 		this.mockMvc
-			.perform(post(BASE_URL)
+			.perform(post(BASE_URL, "other-client-id") //sets a different application (master clients are allowed to send notifications in other apps behalf)
 					.contentType(Constants.APPLICATION_JSON_UTF8)
 					.content(convertObjectToJsonBytes(postVO))	
 					)
 				.andExpect(status().isOk());
 		//verify if saved and sent two notifications, one for each username
-		verify(notificationRepository, times(2)).save(Matchers.<Notification>any());
-		verify(senderService, times(2)).sendNotification(Matchers.<Notification>any());	
+		verify(notificationRepository, times(1)).save(Matchers.<Notification>any());
+		verify(senderService, times(1)).sendNotification(Matchers.<Notification>any());
 	}
 	
 	/**
@@ -149,7 +149,7 @@ public class NotificationsResourceTests {
 		when(applicationRepository.findByApplicationId("my-client-id")).thenReturn(null);
 		
 		this.mockMvc
-			.perform(post(BASE_URL)
+			.perform(post(BASE_URL, "my-client-id")
 					.contentType(Constants.APPLICATION_JSON_UTF8)
 					.content(convertObjectToJsonBytes(postVO))	
 					)
@@ -167,7 +167,6 @@ public class NotificationsResourceTests {
 	@Test
 	public void testPostAsRegularUserWithInvalidFields() throws Exception{
 		NotificationPostVO postVO = new NotificationPostVO();
-		postVO.setApplicationId("my-client-id");
 		postVO.setMessage(null); //message is a required field
 		postVO.setType("Alert");
 		postVO.setUsernames("amoraes");
@@ -175,7 +174,7 @@ public class NotificationsResourceTests {
 		when(authorizationHelper.hasRole(ROLE_MASTER)).thenReturn(false);
 		when(authorizationHelper.getClientId()).thenReturn("my-client-id");
 		this.mockMvc
-			.perform(post(BASE_URL)
+			.perform(post(BASE_URL, "my-client-id")
 					.contentType(Constants.APPLICATION_JSON_UTF8)
 					.content(convertObjectToJsonBytes(postVO))	
 					)
@@ -192,15 +191,14 @@ public class NotificationsResourceTests {
 	@Test
 	public void testPostAsRegularUserWithInvalidId() throws Exception{
 		NotificationPostVO postVO = new NotificationPostVO();
-		postVO.setApplicationId("other-client-id");
-		postVO.setMessage("This is a special notification message wrote for you"); //message is a required field
+		postVO.setMessage("This is a special notification message wrote for you"); 
 		postVO.setType("Important");
 		postVO.setUsernames("amoraes");
 			
 		when(authorizationHelper.hasRole(ROLE_MASTER)).thenReturn(false);
 		when(authorizationHelper.getClientId()).thenReturn("my-client-id");
 		this.mockMvc
-			.perform(post(BASE_URL)
+			.perform(post(BASE_URL, "other-client-id")
 					.contentType(Constants.APPLICATION_JSON_UTF8)
 					.content(convertObjectToJsonBytes(postVO))	
 					)

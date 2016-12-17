@@ -15,7 +15,6 @@ public class NotificationPostVO implements Serializable {
 
 	private static final long serialVersionUID = 6451739421647418433L;
 	
-	private String applicationId;
 	@NotNull
 	private String[] usernames;
 	@NotNull
@@ -23,12 +22,6 @@ public class NotificationPostVO implements Serializable {
 	@NotNull
 	private String message;
 	
-	public String getApplicationId() {
-		return applicationId;
-	}
-	public void setApplicationId(String applicationId) {
-		this.applicationId = applicationId;
-	}
 	public String[] getUsernames() {
 		return usernames;
 	}

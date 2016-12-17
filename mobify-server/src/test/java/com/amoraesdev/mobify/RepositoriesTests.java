@@ -115,5 +115,7 @@ public class RepositoriesTests {
 		
 		List<Notification> listRetrieved = notificationRepository.findByUsernameAndApplicationId(username, appId);
 		Assert.assertEquals(2, listRetrieved.size());
+		
+		
 	}
 }
