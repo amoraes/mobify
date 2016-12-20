@@ -15,6 +15,16 @@ public class Application implements Serializable {
 	
 	private static final long serialVersionUID = 5940047209039790892L;
 	
+	public Application() {
+	}
+	
+	public Application(String applicationId, String name, String icon) {
+		super();
+		this.applicationId = applicationId;
+		this.name = name;
+		this.icon = icon;
+	}
+
 	/**
 	 * This one should be the same as your Client Id in the OAuth authentication server
 	 */

@@ -8,6 +8,10 @@ import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 
 import com.amoraesdev.mobify.Constants;
 
+/**
+ * Localization configuration class
+ * @author Alessandro Moraes (alessandro at amoraesdev.com)
+ */
 @Configuration
 public class LocalizationConfig {
 	
