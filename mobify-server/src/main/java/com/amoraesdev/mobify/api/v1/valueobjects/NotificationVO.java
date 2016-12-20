@@ -1,45 +1,40 @@
 package com.amoraesdev.mobify.api.v1.valueobjects;
 
-import java.io.Serializable;
 import java.util.Date;
-import java.util.UUID;
 
-import javax.validation.constraints.NotNull;
-
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 
 /**
- * Value Object to represent a new Notification sent to a user
+ * Value Object to represent a new Notification sent to a user (return values only)
  * @author Alessandro Moraes (alessandro at amoraesdev.com)
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 @JsonTypeName("Notification")
-public class NotificationVO implements Serializable {
+public class NotificationVO {
 
-	private static final long serialVersionUID = -6902791979734017283L;
-	
-	private UUID id;
+	private String notificationId;
 	
 	private String applicationId;
 	
-	@NotNull
 	private String type;
 	
-	@NotNull
 	private String message;
 	
-	@NotNull
+	private String username;
+	
 	private Date timestampSent;
 	
 	private Date timestampReceived;
 
 	private Date timestampRead;
 
-	public UUID getId() {
-		return id;
+	public String getNotificationId() {
+		return notificationId;
 	}
 
-	public void setId(UUID id) {
-		this.id = id;
+	public void setNotificationId(String notificationId) {
+		this.notificationId = notificationId;
 	}
 
 	public String getApplicationId() {
@@ -66,6 +61,14 @@ public class NotificationVO implements Serializable {
 		this.message = message;
 	}
 
+	public String getUsername() {
+		return username;
+	}
+
+	public void setUsername(String username) {
+		this.username = username;
+	}
+
 	public Date getTimestampSent() {
 		return timestampSent;
 	}
@@ -88,6 +91,37 @@ public class NotificationVO implements Serializable {
 
 	public void setTimestampRead(Date timestampRead) {
 		this.timestampRead = timestampRead;
+	}
+	
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((notificationId == null) ? 0 : notificationId.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		NotificationVO other = (NotificationVO) obj;
+		if (notificationId == null) {
+			if (other.notificationId != null)
+				return false;
+		} else if (!notificationId.equals(other.notificationId))
+			return false;
+		return true;
+	}
+
+	@Override
+	public String toString() {
+		return "Notification [notificationId=" + notificationId + ", username=" + username + ", applicationId=" + applicationId + ", type="
+				+ type + ", message=" + message + "]";
 	}
 	
 }

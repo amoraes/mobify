@@ -12,6 +12,7 @@ public interface NotificationRepository extends CassandraRepository<Notification
 	@Query("select * from notification where username = ?0 and application_id = ?1")
 	public List<Notification> findByUsernameAndApplicationId(String username, String applicationId);
 	
-	
+	@Query("select * from notification where username = ?0 and received = false")
+	public List<Notification> findByUsernameAndNotReceived(String username);
 
 }

@@ -54,6 +54,7 @@ public class RestErrorsControllerAdvice extends ResponseEntityExceptionHandler
 	@ExceptionHandler(NotFoundException.class)
 	public ResponseEntity<?> handleException(NotFoundException ex){
 		log.debug("Handling NotFoundException: "+ex.getMessage());
+		log.error(messageSource.getMessage(ex.getMessage(), new Object[]{ ex.getEntityName(), ex.getKey() }, Constants.DEFAULT_API_LOCALE));
 		return ResponseEntity.notFound().build();
 	}
 	

@@ -11,7 +11,7 @@ import org.springframework.data.cassandra.repository.support.BasicMapId;
  */
 public class MapIdGenerator {
 
-	public static MapId createNotificationKey(String id, String username, String applicationId){
+	public static MapId createNotificationPK(String id, String username, String applicationId){
 		return BasicMapId.id()
 				.with("id", UUID.fromString(id))
 				.with("username", username)

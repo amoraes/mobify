@@ -7,6 +7,7 @@ import java.util.UUID;
 import org.springframework.cassandra.core.Ordering;
 import org.springframework.cassandra.core.PrimaryKeyType;
 import org.springframework.data.cassandra.mapping.Column;
+import org.springframework.data.cassandra.mapping.Indexed;
 import org.springframework.data.cassandra.mapping.PrimaryKeyColumn;
 import org.springframework.data.cassandra.mapping.Table;
 
@@ -38,9 +39,14 @@ public class Notification implements Serializable {
 			ordering = Ordering.DESCENDING, type = PrimaryKeyType.CLUSTERED)
 	private Date timestampSent;
 	
+	@Indexed("notification_received")
+	private Boolean received;
+	
 	@Column("timestamp_received")
 	private Date timestampReceived;
 
+	private Boolean read;
+	
 	@Column("timestamp_read")
 	private Date timestampRead;
 	
@@ -49,9 +55,37 @@ public class Notification implements Serializable {
 	private String message;
 
 	/**
-	 * Creates a new {@link Notification} to be sent to a {@link User} 
+	 * Creates a {@link Notification} to be sent to a {@link User}
 	 * @param id
-	 * @param username 
+	 * @param username
+	 * @param applicationId
+	 * @param timestampSent
+	 * @param received
+	 * @param timestampReceived
+	 * @param read
+	 * @param timestampRead
+	 * @param type
+	 * @param message
+	 */
+	public Notification(UUID id, String username, String applicationId, Date timestampSent, Boolean received,
+			Date timestampReceived, Boolean read, Date timestampRead, String type, String message) {
+		super();
+		this.id = id;
+		this.username = username;
+		this.applicationId = applicationId;
+		this.timestampSent = timestampSent;
+		this.received = received;
+		this.timestampReceived = timestampReceived;
+		this.read = read;
+		this.timestampRead = timestampRead;
+		this.type = type;
+		this.message = message;
+	}
+	
+	/**
+	 * Creates a new (non-received and non-read) {@link Notification} to be sent to a {@link User}
+	 * @param id
+	 * @param username
 	 * @param applicationId
 	 * @param timestampSent
 	 * @param type
@@ -63,8 +97,14 @@ public class Notification implements Serializable {
 		this.username = username;
 		this.applicationId = applicationId;
 		this.timestampSent = timestampSent;
+		this.received = false;
+		this.read = false;
 		this.type = type;
 		this.message = message;
+	}
+	
+	public Notification(){
+		
 	}
 
 	public UUID getId() {
@@ -120,6 +160,8 @@ public class Notification implements Serializable {
 	}
 
 	public void setTimestampReceived(Date timestampReceived) {
+		if(timestampReceived != null) 
+			this.received = true; //also mark received as true
 		this.timestampReceived = timestampReceived;
 	}
 
@@ -128,7 +170,25 @@ public class Notification implements Serializable {
 	}
 
 	public void setTimestampRead(Date timestampRead) {
+		if(timestampRead != null)
+			this.read = true; //also mark read as true
 		this.timestampRead = timestampRead;
+	}
+
+	public Boolean getReceived() {
+		return received;
+	}
+
+	public void setReceived(Boolean received) {
+		this.received = received;
+	}
+
+	public Boolean getRead() {
+		return read;
+	}
+
+	public void setRead(Boolean read) {
+		this.read = read;
 	}
 
 	@Override

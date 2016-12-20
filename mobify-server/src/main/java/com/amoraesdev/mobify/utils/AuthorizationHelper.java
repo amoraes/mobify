@@ -1,5 +1,6 @@
 package com.amoraesdev.mobify.utils;
 
+import java.security.Principal;
 import java.util.Collection;
 import java.util.HashMap;
 
@@ -63,5 +64,13 @@ public class AuthorizationHelper {
 			return ((OAuth2Authentication)auth).getName();
 		}
 		return null;
+	}
+	
+	/**
+	 * Return the username currently logged in
+	 * This method make the code on controllers easier to unit test
+	 */
+	public String getUsername(Principal user){
+		return user.getName();
 	}
 }

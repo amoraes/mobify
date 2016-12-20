@@ -3,6 +3,7 @@ package com.amoraesdev.mobify;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -22,6 +23,7 @@ import com.amoraesdev.mobify.repositories.ApplicationRepository;
 import com.amoraesdev.mobify.repositories.MobileDeviceRepository;
 import com.amoraesdev.mobify.repositories.NotificationRepository;
 import com.amoraesdev.mobify.repositories.UserRepository;
+import com.datastax.driver.core.Session;
 import com.datastax.driver.core.utils.UUIDs;
 
 /**
@@ -45,6 +47,9 @@ public class RepositoriesTests {
 	
 	@Autowired
 	private NotificationRepository notificationRepository;
+	
+	@Autowired
+	Session session;
 	
 	/**
 	 * Tests {@link UserRepository}
@@ -108,14 +113,21 @@ public class RepositoriesTests {
 	public void testNotificationRepository() {
 		String appId = "monitor-checker";
 		String username = "alessandro.moraes";
-		Notification notification1 = new Notification(UUIDs.timeBased(), username ,appId, new Date(), "Alert", "Server 1 is offline");
-		Notification notification2 = new Notification(UUIDs.timeBased(), username ,appId, new Date(), "Message", "Server 2 is online");
-		Notification notification3 = new Notification(UUIDs.timeBased(), username ,"other-app", new Date(), "Message", "Any message");
+		Notification notification1 = new Notification(UUIDs.timeBased(), username ,appId, new Date(), true, new Date(), false, null , "Alert", "Server 1 is offline");
+		notification1.setTimestampReceived(new Date()); //this notification has been received by the user already
+		Notification notification2 = new Notification(UUIDs.timeBased(), username ,appId, new Date(), false, null, false, null, "Message", "Server 2 is online");
+		Notification notification3 = new Notification(UUIDs.timeBased(), username ,"other-app", new Date(), false, null, false, null, "Message", "Any message");
 		notificationRepository.save(Arrays.asList(notification1,notification2, notification3));
 		
-		List<Notification> listRetrieved = notificationRepository.findByUsernameAndApplicationId(username, appId);
-		Assert.assertEquals(2, listRetrieved.size());
+		List<Notification> listByApp = notificationRepository.findByUsernameAndApplicationId(username, appId);
+		Assert.assertEquals(2, listByApp.size());
 		
+		//create the secondary index 
+		//TODO verify why spring boot is not creating it automatically
+		session.execute("CREATE INDEX IF NOT EXISTS notification_received ON notification (received);");
+		
+		List<Notification> listNotReceivedByUsername = notificationRepository.findByUsernameAndNotReceived(username);
+		Assert.assertEquals(2, listNotReceivedByUsername.size());
 		
 	}
 }
