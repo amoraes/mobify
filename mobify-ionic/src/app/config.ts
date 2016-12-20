@@ -13,5 +13,7 @@ export const CONFIG = {
   token_access_token_key: "access_token",
   token_refresh_token_key: "refresh_token",
   token_expiration_key: "expires_in",
-  token_expiration_type: "seconds" //could be in milliseconds to  
+  token_expiration_type: "seconds", //could be in milliseconds to  
+  //mobify restful api base url
+  mobify_api_base_url: "http://localhost:8080/mobify/api/v1" 
 }

@@ -4,7 +4,8 @@ import { NavController } from 'ionic-angular';
 import { LoadingController } from 'ionic-angular';
 import { Loading } from 'ionic-angular';
 
-import { AuthService } from '../../providers/auth-service';
+import { AuthService } from '../../providers/auth.service';
+import { ContentService } from '../../providers/content.service';
 
 import { HomePage } from '../home/home';
 
@@ -14,10 +15,14 @@ import { HomePage } from '../home/home';
 })
 export class LoginPage {
   
-  public username:string = 'admin';
-  public password:string = 'admin123';
+  public username:string = 'user';
+  public password:string = 'user123';
   
-  constructor(private navCtrl:NavController, private loadingCtrl: LoadingController, private authService:AuthService) {
+  constructor(private navCtrl: NavController, 
+    private loadingCtrl: LoadingController, 
+    private authService: AuthService,
+    private contentService: ContentService) {
+    
   }
   
   login(event){
@@ -30,6 +35,9 @@ export class LoginPage {
         loader.dismissAll();
         if(data == true){
           console.log('User logged in');
+          //initialize the data
+          this.contentService.init()
+          .then
           //set the root page to avoid user going back to login screen
           this.navCtrl.setRoot(HomePage);
         }else{

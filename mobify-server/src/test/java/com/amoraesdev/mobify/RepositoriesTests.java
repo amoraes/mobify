@@ -3,7 +3,6 @@ package com.amoraesdev.mobify;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
-import java.util.UUID;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -121,10 +120,6 @@ public class RepositoriesTests {
 		
 		List<Notification> listByApp = notificationRepository.findByUsernameAndApplicationId(username, appId);
 		Assert.assertEquals(2, listByApp.size());
-		
-		//create the secondary index 
-		//TODO verify why spring boot is not creating it automatically
-		session.execute("CREATE INDEX IF NOT EXISTS notification_received ON notification (received);");
 		
 		List<Notification> listNotReceivedByUsername = notificationRepository.findByUsernameAndNotReceived(username);
 		Assert.assertEquals(2, listNotReceivedByUsername.size());

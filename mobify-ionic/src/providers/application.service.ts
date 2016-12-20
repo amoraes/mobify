@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Http } from '@angular/http';
 import 'rxjs/add/operator/map';
 
-import { BasicService } from './basic-service';
+import { BasicService } from './basic.service';
 
 import { Application } from '../model/application';
 import { User } from '../model/user';
@@ -13,7 +13,7 @@ import { User } from '../model/user';
 @Injectable()
 export class ApplicationService extends BasicService {
 
-  constructor(public http: Http) {
+  constructor(private http: Http) {
     super();
   }
   

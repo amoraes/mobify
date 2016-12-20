@@ -3,7 +3,7 @@ import { Http, Headers } from '@angular/http';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/toPromise';
 
-import { BasicService } from './basic-service';
+import { BasicService } from './basic.service';
 
 import { User } from '../model/user';
 
@@ -11,6 +11,7 @@ import { CONFIG } from '../app/config';
 
 /**
  * This service class do all the work related to the OAuth authentication flow
+ * It also is a singleton and keeps the user state
  */
 @Injectable()
 export class AuthService extends BasicService {
@@ -20,7 +21,7 @@ export class AuthService extends BasicService {
    */
   private user:User;  
   
-  constructor(public http: Http) {
+  constructor(private http: Http) {
     super();
   }
   
