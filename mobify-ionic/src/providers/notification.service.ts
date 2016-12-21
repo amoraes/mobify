@@ -38,19 +38,20 @@ export class NotificationService extends BasicService {
    * Get all unreceived notifications from the backend
    */
   public getUnreceived(): Promise<Notification[]>{
-    let list:Notification[]; 
     let headers = new Headers();
     headers.append("Authorization", "Bearer " + this.authService.getUser().accessToken);
-    console.log(headers);
     return this.http.get(CONFIG.mobify_api_base_url + "/notifications/unreceived", { headers: headers })
     .toPromise()
     .then(
       res => {
+        console.log(res.json());
+        let list:Notification[] = new Array(); 
         if(res.status == 200){
-          let array:Array<any> = res.json();
+          let array = res.json();
           for(let tmp of array){
             list.push(this.convert(tmp));
           }
+          console.log(list);
           return list;
         }else{
           return null;

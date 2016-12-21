@@ -1,8 +1,6 @@
 import { Component } from '@angular/core';
 
-import { NavController } from 'ionic-angular';
-import { LoadingController } from 'ionic-angular';
-import { Loading } from 'ionic-angular';
+import { NavController, ToastController, LoadingController, Loading } from 'ionic-angular';
 
 import { AuthService } from '../../providers/auth.service';
 import { ContentService } from '../../providers/content.service';
@@ -18,7 +16,8 @@ export class LoginPage {
   public username:string = 'user';
   public password:string = 'user123';
   
-  constructor(private navCtrl: NavController, 
+  constructor(private navCtrl: NavController,
+    private toastCtrl: ToastController, 
     private loadingCtrl: LoadingController, 
     private authService: AuthService,
     private contentService: ContentService) {
@@ -32,16 +31,35 @@ export class LoginPage {
     loader.present();
     this.authService.login(this.username, this.password)
       .then(data => {
-        loader.dismissAll();
         if(data == true){
           console.log('User logged in');
           //initialize the data
           this.contentService.init()
-          .then
-          //set the root page to avoid user going back to login screen
-          this.navCtrl.setRoot(HomePage);
+          .then(data => {
+            if(data == true){
+              loader.dismissAll();
+              //set the root page to avoid user going back to login screen
+              this.navCtrl.setRoot(HomePage);
+            }else{
+              console.log('Error initializing application data');
+              loader.dismissAll();
+              //show an error message
+              let toast = this.toastCtrl.create({
+                message: 'An unexpected error occurred!',
+                duration: 3000
+              });
+              toast.present();
+            }
+          });
         }else{
           console.log('Wrong username or password');
+          loader.dismissAll();
+          //show an error message
+          let toast = this.toastCtrl.create({
+            message: 'Wrong username or password!',
+            duration: 3000
+          });
+          toast.present();
         }
      });
   }

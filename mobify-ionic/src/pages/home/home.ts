@@ -3,27 +3,24 @@ import { Component } from '@angular/core';
 import { NavController, ToastController, LoadingController, Loading } from 'ionic-angular';
 
 import { AuthService } from '../../providers/auth.service';
-import { ApplicationService } from '../../providers/application.service';
-import { NotificationService } from '../../providers/notification.service';
+import { ContentService } from '../../providers/content.service';
 
 import { Application } from '../../model/application';
-import { Notification } from '../../model/notification';
 
 @Component({
   selector: 'page-home',
-  templateUrl: 'home.html',
-  providers: [ ApplicationService, NotificationService ]
+  templateUrl: 'home.html'
 })
 export class HomePage {
   
-  private applications:Application[]; 
+  private applications: Application[] = new Array(); 
 
   constructor(private navCtrl: NavController, 
     private toastCtrl: ToastController, 
     private loadingCtrl: LoadingController, 
     private authService: AuthService, 
-    private applicationService: ApplicationService, 
-    private notificationService: NotificationService) {
+    private contentService: ContentService
+    ) {
     
     //show a welcome message
     let toast = this.toastCtrl.create({
@@ -37,11 +34,8 @@ export class HomePage {
       content: "Please wait..."
     });
     loader.present();
-    this.notificationService.getUnreceived()
-      .then(data => {
-        loader.dismissAll();
-                
-     });
+    this.updateApplicationsList();
+    loader.dismissAll();
     
     
     /*
@@ -51,6 +45,18 @@ export class HomePage {
         this.applications = data;
       });
      */    
+  }
+
+  private updateApplicationsList(): void {
+    this.applications = new Array();
+    let iter = this.contentService.getApplications();
+    let result = iter.next();
+    while(result.done == false){
+      let app: Application = result.value;
+      this.applications.push(app);
+      result = iter.next();
+    }
+    console.log(this.applications);
   }
    
    

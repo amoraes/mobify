@@ -9,6 +9,6 @@ export class Application {
   public name:string;
   public icon:string;
   public lastMessageText:string;
-  public notifications: Notification[];
+  public notifications: Notification[] = new Array();
   
 }

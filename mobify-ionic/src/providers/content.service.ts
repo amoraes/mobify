@@ -1,4 +1,6 @@
 import { Injectable } from '@angular/core';
+import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/toPromise';
 
 import { BasicService } from './basic.service';
 
@@ -22,9 +24,9 @@ export class ContentService extends BasicService{
   public init(): Promise<boolean> {
     console.log('initializing mobify data');
     this.applications = new Map<String,Application>();
-    this.notificationService.getUnreceived()
-      .then(data => {
-          for(let n of data){
+    return this.notificationService.getUnreceived()
+      .then(data => {        
+         for(let n of data){
              if(this.applications.has(n.applicationId) == false){
                let app: Application = new Application();
                app.applicationId = n.applicationId;
@@ -35,7 +37,8 @@ export class ContentService extends BasicService{
              this.applications.get(n.applicationId).lastMessageText = n.message;
           }   
           return true;   
-     });
+     })
+     .catch(this.handleError);
   }
   
   public getApplications(): IterableIterator<Application> {

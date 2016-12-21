@@ -4,6 +4,8 @@ import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.validation.Valid;
 
@@ -162,7 +164,7 @@ public class NotificationsResource {
 			vos.add(vo);
 		});
 		//save the notifications updated with timestampReceived
-		notificationRepository.save(notifications);
+		//notificationRepository.save(notifications);
 		
 		return vos;
 	}
