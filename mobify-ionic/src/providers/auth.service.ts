@@ -49,7 +49,6 @@ export class AuthService extends BasicService {
       .toPromise()
       .then(
         res => {
-          console.log(res.json());
           if(res.status == 200){
             let user:User = new User();
             user.accessToken = res.json()[CONFIG.token_access_token_key];
@@ -68,7 +67,6 @@ export class AuthService extends BasicService {
             .then(
               res => {
                 if(res.status == 200){
-                  console.log(res.json());
                   user.username = res.json().name;
                   this.user = user;
                   return true;

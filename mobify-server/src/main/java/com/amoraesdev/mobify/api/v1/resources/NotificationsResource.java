@@ -26,6 +26,7 @@ import com.amoraesdev.mobify.entities.User;
 import com.amoraesdev.mobify.exceptions.InvalidEntityException;
 import com.amoraesdev.mobify.exceptions.NotFoundException;
 import com.amoraesdev.mobify.repositories.ApplicationRepository;
+import com.amoraesdev.mobify.repositories.UserSettingsRepository;
 import com.amoraesdev.mobify.repositories.NotificationRepository;
 import com.amoraesdev.mobify.services.SenderService;
 import com.amoraesdev.mobify.utils.AuthorizationHelper;

@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 
 /**
- * Value Object to represent a new Notification sent to a user (return values only)
+ * Value Object to represent a Notification sent to a user (return values only)
  * @author Alessandro Moraes (alessandro at amoraesdev.com)
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -120,7 +120,7 @@ public class NotificationVO {
 
 	@Override
 	public String toString() {
-		return "Notification [notificationId=" + notificationId + ", username=" + username + ", applicationId=" + applicationId + ", type="
+		return "NotificationVO [notificationId=" + notificationId + ", username=" + username + ", applicationId=" + applicationId + ", type="
 				+ type + ", message=" + message + "]";
 	}
 	

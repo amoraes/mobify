@@ -7,52 +7,28 @@ import org.springframework.data.cassandra.mapping.PrimaryKeyColumn;
 import org.springframework.data.cassandra.mapping.Table;
 
 /**
- * Represents a connected mobile device from a {@link User}
+ * Represents {@link Application} settings for an {@link User}
  * @author Alessandro Moraes (alessandro at amoraesdev.com)
  */
-@Table("mobile_device")
-public class MobileDevice implements Serializable{
+@Table("settings")
+public class UserSettings implements Serializable{
 	
-	private static final long serialVersionUID = -9095978360900074267L;
+	private static final long serialVersionUID = 4471808282302862623L;
 
-	public static enum Type {
-		ANDROID,
-		IOS
-	}
-	
 	@PrimaryKeyColumn(name="username",ordinal = 1,type = PrimaryKeyType.PARTITIONED)
 	private String username;
 	
-	@PrimaryKeyColumn(name="device_id",ordinal = 1,type = PrimaryKeyType.CLUSTERED)
-	private String deviceId;
+	@PrimaryKeyColumn(name="application_id",ordinal = 1,type = PrimaryKeyType.CLUSTERED)
+	private String applicationId;
 	
-	private String type;
-	
-	public MobileDevice(){
+	public UserSettings(){
 		
 	}
 
-	public MobileDevice(String username, String deviceId, Type type) {
+	public UserSettings(String username, String applicationId) {
 		super();
 		this.username = username;
-		this.deviceId = deviceId;
-		this.type = type != null ? type.name() : null;
-	}
-
-	public String getDeviceId() {
-		return deviceId;
-	}
-
-	public void setDeviceId(String deviceId) {
-		this.deviceId = deviceId;
-	}
-	
-	public Type getType() {
-		return type != null ? Type.valueOf(type) : null;
-	}
-
-	public void setType(Type type) {
-		this.type = type != null ? type.name() : null;
+		this.applicationId = applicationId;
 	}
 
 	public String getUsername() {
@@ -63,11 +39,19 @@ public class MobileDevice implements Serializable{
 		this.username = username;
 	}
 
+	public String getApplicationId() {
+		return applicationId;
+	}
+
+	public void setApplicationId(String applicationId) {
+		this.applicationId = applicationId;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((type == null) ? 0 : type.hashCode());
+		result = prime * result + ((applicationId == null) ? 0 : applicationId.hashCode());
 		result = prime * result + ((username == null) ? 0 : username.hashCode());
 		return result;
 	}
@@ -80,11 +64,11 @@ public class MobileDevice implements Serializable{
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		MobileDevice other = (MobileDevice) obj;
-		if (type == null) {
-			if (other.type != null)
+		UserSettings other = (UserSettings) obj;
+		if (applicationId == null) {
+			if (other.applicationId != null)
 				return false;
-		} else if (!type.equals(other.type))
+		} else if (!applicationId.equals(other.applicationId))
 			return false;
 		if (username == null) {
 			if (other.username != null)
@@ -96,7 +80,7 @@ public class MobileDevice implements Serializable{
 
 	@Override
 	public String toString() {
-		return "MobileDevice [username=" + username + ", deviceId=" + deviceId + ", type=" + type + "]";
+		return "ApplicationUserSettings [username=" + username + ", applicationId=" + applicationId + "]";
 	}
 	
 }

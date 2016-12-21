@@ -44,6 +44,10 @@ import com.amoraesdev.mobify.utils.AuthorizationHelper;
 import com.amoraesdev.mobify.utils.RestErrorsControllerAdvice;
 import com.datastax.driver.core.utils.UUIDs;
 
+/**
+ * {@link NotificationsResource} unit tests 
+ * @author Alessandro Moraes (alessandro at amoraesdev.com)
+ */
 public class NotificationsResourceTests {
 
 	private MockMvc mockMvc;

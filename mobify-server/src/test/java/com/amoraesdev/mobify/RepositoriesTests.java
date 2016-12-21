@@ -14,11 +14,13 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import com.amoraesdev.mobify.entities.Application;
+import com.amoraesdev.mobify.entities.UserSettings;
 import com.amoraesdev.mobify.entities.MobileDevice;
 import com.amoraesdev.mobify.entities.MobileDevice.Type;
 import com.amoraesdev.mobify.entities.Notification;
 import com.amoraesdev.mobify.entities.User;
 import com.amoraesdev.mobify.repositories.ApplicationRepository;
+import com.amoraesdev.mobify.repositories.UserSettingsRepository;
 import com.amoraesdev.mobify.repositories.MobileDeviceRepository;
 import com.amoraesdev.mobify.repositories.NotificationRepository;
 import com.amoraesdev.mobify.repositories.UserRepository;
@@ -40,6 +42,9 @@ public class RepositoriesTests {
 	
 	@Autowired
 	private ApplicationRepository applicationRepository;
+
+	@Autowired
+	private UserSettingsRepository applicationUserSettingsRepository;
 	
 	@Autowired
 	private MobileDeviceRepository mobileDeviceRepository;
@@ -82,6 +87,20 @@ public class RepositoriesTests {
 		Assert.assertEquals("https://www.amoraesdev.com/mobify/icons/monitor-checker.svg", appRetrieved.getIcon());
 		Assert.assertEquals("System Monitor", appRetrieved.getName());		
 		
+	}
+	
+	@Test
+	public void testApplicationUserSettingsRepository(){
+		UserSettings settings = new UserSettings("alessandro.moraes", "monitor-checker");
+		applicationUserSettingsRepository.save(settings);
+		settings = new UserSettings("alessandro.moraes", "human-resources");
+		applicationUserSettingsRepository.save(settings);
+		
+		List<UserSettings> listSettings = applicationUserSettingsRepository.findByUsername("alessandro.moraes");
+		Assert.assertEquals(2, listSettings.size());
+		
+		settings = applicationUserSettingsRepository.findByUsernameAndApplicationId("alessandro.moraes", "human-resources");
+		Assert.assertNotNull(settings);
 	}
 	
 	/**

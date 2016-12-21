@@ -44,14 +44,12 @@ export class NotificationService extends BasicService {
     .toPromise()
     .then(
       res => {
-        console.log(res.json());
         let list:Notification[] = new Array(); 
         if(res.status == 200){
           let array = res.json();
           for(let tmp of array){
             list.push(this.convert(tmp));
           }
-          console.log(list);
           return list;
         }else{
           return null;
