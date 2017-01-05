@@ -13,9 +13,9 @@ import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import com.amoraesdev.mobify.entities.UserSettings;
+import com.amoraesdev.mobify.entities.UserApplicationSettings;
 import com.amoraesdev.mobify.entities.Notification;
-import com.amoraesdev.mobify.repositories.UserSettingsRepository;
+import com.amoraesdev.mobify.repositories.UserApplicationSettingsRepository;
 import com.datastax.driver.core.utils.UUIDs;
 
 /**
@@ -28,7 +28,7 @@ public class SenderServiceTests {
 	private SenderService senderService;
 	
 	@Mock
-	private UserSettingsRepository userSettingsRepository;
+	private UserApplicationSettingsRepository userSettingsRepository;
 	
 	@Before
 	public void init() {
@@ -49,7 +49,7 @@ public class SenderServiceTests {
 				.findByUsernameAndApplicationId(username, applicationId)).thenReturn(null);
 		senderService.sendNotification(notification);
 		//verify if saved a settings for this user/application
-		verify(userSettingsRepository, times(1)).save(Matchers.<UserSettings>any());
+		verify(userSettingsRepository, times(1)).save(Matchers.<UserApplicationSettings>any());
 	}
 	
 	/**
@@ -63,10 +63,10 @@ public class SenderServiceTests {
 		Notification notification = new Notification(UUIDs.timeBased(), username, 
 				applicationId, new Date(), "Alert", "Server 1 is offline");
 		when(userSettingsRepository
-				.findByUsernameAndApplicationId(username, applicationId)).thenReturn(new UserSettings(username, applicationId));
+				.findByUsernameAndApplicationId(username, applicationId)).thenReturn(new UserApplicationSettings(username, applicationId, false));
 		senderService.sendNotification(notification);
 		//verify if didn't saved a settings for this user/application		
-		verify(userSettingsRepository, times(0)).save(Matchers.<UserSettings>any());
+		verify(userSettingsRepository, times(0)).save(Matchers.<UserApplicationSettings>any());
 	}
 	
 }

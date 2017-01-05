@@ -14,13 +14,13 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import com.amoraesdev.mobify.entities.Application;
-import com.amoraesdev.mobify.entities.UserSettings;
+import com.amoraesdev.mobify.entities.UserApplicationSettings;
 import com.amoraesdev.mobify.entities.MobileDevice;
 import com.amoraesdev.mobify.entities.MobileDevice.Type;
 import com.amoraesdev.mobify.entities.Notification;
 import com.amoraesdev.mobify.entities.User;
 import com.amoraesdev.mobify.repositories.ApplicationRepository;
-import com.amoraesdev.mobify.repositories.UserSettingsRepository;
+import com.amoraesdev.mobify.repositories.UserApplicationSettingsRepository;
 import com.amoraesdev.mobify.repositories.MobileDeviceRepository;
 import com.amoraesdev.mobify.repositories.NotificationRepository;
 import com.amoraesdev.mobify.repositories.UserRepository;
@@ -44,7 +44,7 @@ public class RepositoriesTests {
 	private ApplicationRepository applicationRepository;
 
 	@Autowired
-	private UserSettingsRepository applicationUserSettingsRepository;
+	private UserApplicationSettingsRepository applicationUserSettingsRepository;
 	
 	@Autowired
 	private MobileDeviceRepository mobileDeviceRepository;
@@ -91,12 +91,12 @@ public class RepositoriesTests {
 	
 	@Test
 	public void testApplicationUserSettingsRepository(){
-		UserSettings settings = new UserSettings("alessandro.moraes", "monitor-checker");
+		UserApplicationSettings settings = new UserApplicationSettings("alessandro.moraes", "monitor-checker", false);
 		applicationUserSettingsRepository.save(settings);
-		settings = new UserSettings("alessandro.moraes", "human-resources");
+		settings = new UserApplicationSettings("alessandro.moraes", "human-resources", false);
 		applicationUserSettingsRepository.save(settings);
 		
-		List<UserSettings> listSettings = applicationUserSettingsRepository.findByUsername("alessandro.moraes");
+		List<UserApplicationSettings> listSettings = applicationUserSettingsRepository.findByUsername("alessandro.moraes");
 		Assert.assertEquals(2, listSettings.size());
 		
 		settings = applicationUserSettingsRepository.findByUsernameAndApplicationId("alessandro.moraes", "human-resources");

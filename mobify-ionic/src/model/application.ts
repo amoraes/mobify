@@ -1,7 +1,8 @@
 import { Notification } from './notification';
 
 /**
- * Represents an external application capable of sending notifications
+ * Represents an external application capable of sending notifications 
+ * combined with the user settings defined for this application
  */
 export class Application {
   
@@ -10,5 +11,6 @@ export class Application {
   public icon:string;
   public lastMessageText:string;
   public notifications: Notification[] = new Array();
+  public silent: boolean;
   
 }

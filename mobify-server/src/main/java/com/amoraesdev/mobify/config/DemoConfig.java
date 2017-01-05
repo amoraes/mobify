@@ -10,8 +10,10 @@ import org.springframework.context.annotation.Profile;
 
 import com.amoraesdev.mobify.entities.Application;
 import com.amoraesdev.mobify.entities.Notification;
+import com.amoraesdev.mobify.entities.UserApplicationSettings;
 import com.amoraesdev.mobify.repositories.ApplicationRepository;
 import com.amoraesdev.mobify.repositories.NotificationRepository;
+import com.amoraesdev.mobify.repositories.UserApplicationSettingsRepository;
 import com.datastax.driver.core.utils.UUIDs;
 
 /**
@@ -29,12 +31,17 @@ public class DemoConfig {
 	@Autowired
 	private NotificationRepository notificationRepository;
 	
+	@Autowired
+	private UserApplicationSettingsRepository userApplicationSettingsRepository;
+	
 	@PostConstruct
 	public void init(){
 		Application app1 = new Application("mobify","Mobify","icon1");
 		applicationRepository.save(app1);
 		Notification n = new Notification(UUIDs.timeBased(), "user", app1.getApplicationId(), new Date(), "Notice", "Welcome to Mobify! If you received this, our demo is working."); 
 		notificationRepository.save(n);
+		UserApplicationSettings s = new UserApplicationSettings("user", "mobify", false);
+		userApplicationSettingsRepository.save(s);
 		
 		Application app2 = new Application("monitor-checker", "Cluster Monitor", "icon2");
 		applicationRepository.save(app2);
@@ -44,6 +51,10 @@ public class DemoConfig {
 		notificationRepository.save(n);
 		n = new Notification(UUIDs.timeBased(), "user", app2.getApplicationId(), new Date(), "Alert", "Server 3 is offline.");
 		notificationRepository.save(n);
+		s = new UserApplicationSettings("user", "monitor-checker", false);
+		userApplicationSettingsRepository.save(s);
+		s = new UserApplicationSettings("admin", "monitor-checker", false);
+		userApplicationSettingsRepository.save(s);
 		
 		Application app3 = new Application("human-resources", "Human Resources", "icon3");
 		applicationRepository.save(app3);
@@ -51,6 +62,8 @@ public class DemoConfig {
 		notificationRepository.save(n);
 		n = new Notification(UUIDs.timeBased(), "user", app3.getApplicationId(), new Date(), "Notice", "Your paylisps are now available.");
 		notificationRepository.save(n);
+		s = new UserApplicationSettings("user", "human-resources", false);
+		userApplicationSettingsRepository.save(s);
 	}
 	
 }

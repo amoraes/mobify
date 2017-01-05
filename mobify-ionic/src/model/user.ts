@@ -1,5 +1,5 @@
 /**
- * Represents an user logged in
+ * Represents a user logged in
  */
 export class User {
   

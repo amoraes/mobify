@@ -11,7 +11,7 @@ import { Application } from '../model/application';
 import { CONFIG } from '../app/config';
 
 /**
- * This service class connect to the API to get applications data
+ * This service class connect to the API to get Application and User Application Settings data
  */
 @Injectable()
 export class ApplicationService extends BasicService {
@@ -21,34 +21,38 @@ export class ApplicationService extends BasicService {
   }
   
   /**
-   * Convert an application value object received from the backend to a Application object
+   * Convert a settings value object received from the backend to an Applications object
    */
   private convert(obj: any): Application{
-    let a:Application = new Application();
-    a.applicationId = obj.applicationId;
-    a.name = obj.name;
-    a.icon = obj.icon;
-    return a;
+    let app:Application = new Application();
+    app.applicationId = obj.application.applicationId;
+    app.name = obj.application.name;
+    app.icon = obj.application.icon;
+    app.silent = obj.silent;
+    return app;
   }
 
   /**
-   * Get an Application based on its ID
+   * Get all user settings
    */
-  public getApplication(applicationId: string): Promise<Application>{
+  public getAll(): Promise<Application[]>{
     let headers = new Headers();
     headers.append("Authorization", "Bearer " + this.authService.getUser().accessToken);
-    return this.http.get(CONFIG.mobify_api_base_url + "/applications/" + applicationId, { headers: headers })
+    return this.http.get(CONFIG.mobify_api_base_url + "/user/settings", { headers: headers })
     .toPromise()
     .then(
       res => {
+        let list:Application[] = new Array(); 
         if(res.status == 200){
-          return this.convert(res.json());
-        }else{
-          return null;
+          let array = res.json();
+          for(let tmp of array){
+            list.push(this.convert(tmp));
+          }
+          return list;
         }
       }
     )
     .catch(this.handleError);
   }
-
+  
 }

@@ -9,10 +9,11 @@ import { NotificationService } from './notification.service';
 import { ApplicationService } from './application.service';
 
 import { Application } from '../model/application';
+import { ApplicationSettings } from '../model/application-settings';
 import { Notification } from '../model/notification';
 
 /**
- * This class is a singleton to keep the data of the application synchronized
+ * This class is a singleton to keep the content of the application synchronized
  */
 @Injectable()
 export class ContentService extends BasicService{
@@ -26,31 +27,24 @@ export class ContentService extends BasicService{
   public init(): Promise<boolean> {
     console.log('initializing mobify data');
     this.applications = new Map<String,Application>();
-    return this.notificationService.getUnreceived()
+    //load all app settings
+    return this.applicationService.getAll()
+    .then(allAppSettings => {
+      for(let appSettings of allAppSettings){
+        this.applications.set(appSettings.applicationId, appSettings);
+      }
+      //get all the unreceived messages
+      return this.notificationService.getUnreceived()
       .then(notifications => {        
-         //get all the unique apps
-         let applicationsIds: string[] = new Array();
-         for(let n of notifications){
-            if(applicationsIds.indexOf(n.applicationId) < 0){
-              applicationsIds.push(n.applicationId);
-            }
-         }
-         //load all of them
-         let applicationsLoadPromises: Promise<Application>[] = new Array();  
-         for(let appId of applicationsIds){
-            applicationsLoadPromises.push(this.applicationService.getApplication(appId));
-         } 
-         //put the results in the map
-         Observable
-         .forkJoin(applicationsLoadPromises)
-          .subscribe( applications => {
-              for(let app of applications){
-                this.applications.set(app.applicationId, app);
-              }
-              return true;   
-          });
-     })
-     .catch(this.handleError);
+         for(let notification of notifications){
+           this.applications.get(notification.applicationId).notifications.push(notification);
+           this.applications.get(notification.applicationId).lastMessageText = notification.message;
+         }   
+         return true;
+      });
+    })   
+    .catch(this.handleError);
+     
   }
   
   public getApplications(): IterableIterator<Application> {

@@ -9,9 +9,11 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonTypeName("UserSettings")
-public class UserSettingsVO {
+public class UserApplicationSettingsVO {
 
 	private String username;
+	
+	private Boolean silent;
 	
 	private ApplicationVO application;
 
@@ -21,6 +23,14 @@ public class UserSettingsVO {
 
 	public void setUsername(String username) {
 		this.username = username;
+	}
+
+	public Boolean getSilent() {
+		return silent;
+	}
+
+	public void setSilent(Boolean silent) {
+		this.silent = silent;
 	}
 
 	public ApplicationVO getApplication() {
@@ -48,7 +58,7 @@ public class UserSettingsVO {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		UserSettingsVO other = (UserSettingsVO) obj;
+		UserApplicationSettingsVO other = (UserApplicationSettingsVO) obj;
 		if (application == null) {
 			if (other.application != null)
 				return false;

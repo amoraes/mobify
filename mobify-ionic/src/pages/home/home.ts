@@ -37,14 +37,7 @@ export class HomePage {
     this.updateApplicationsList();
     loader.dismissAll();
     
-    
-    /*
-    //load all applications 
-    applicationService.getApplications(authService.getUser())
-      .then((data) => {
-        this.applications = data;
-      });
-     */    
+    console.log(this.applications);
   }
 
   private updateApplicationsList(): void {
@@ -56,7 +49,6 @@ export class HomePage {
       this.applications.push(app);
       result = iter.next();
     }
-    console.log(this.applications);
   }
    
    

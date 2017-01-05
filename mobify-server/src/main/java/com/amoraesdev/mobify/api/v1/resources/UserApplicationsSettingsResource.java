@@ -10,21 +10,21 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.amoraesdev.mobify.api.v1.valueobjects.ApplicationVO;
-import com.amoraesdev.mobify.api.v1.valueobjects.UserSettingsVO;
+import com.amoraesdev.mobify.api.v1.valueobjects.UserApplicationSettingsVO;
 import com.amoraesdev.mobify.entities.Application;
 import com.amoraesdev.mobify.entities.User;
-import com.amoraesdev.mobify.entities.UserSettings;
+import com.amoraesdev.mobify.entities.UserApplicationSettings;
 import com.amoraesdev.mobify.exceptions.NotFoundException;
 import com.amoraesdev.mobify.repositories.ApplicationRepository;
-import com.amoraesdev.mobify.repositories.UserSettingsRepository;
+import com.amoraesdev.mobify.repositories.UserApplicationSettingsRepository;
 import com.amoraesdev.mobify.utils.AuthorizationHelper;
 
 /**
- * API endpoint to manipulate {@link UserSettings}
+ * API endpoint to manipulate {@link UserApplicationSettings}
  * @author Alessandro Moraes (alessandro at amoraesdev.com)
  */
 @RestController
-public class UserSettingsResource {
+public class UserApplicationsSettingsResource {
 	
 	public static final String BASE_URL = "/api/v1/user/settings";
 	
@@ -32,22 +32,22 @@ public class UserSettingsResource {
 	private ApplicationRepository applicationRepositoy;
 	
 	@Autowired 
-	private UserSettingsRepository userSettingsRepository;
+	private UserApplicationSettingsRepository userApplicationSettingsRepository;
 	
 	@Autowired
 	private AuthorizationHelper authorizationHelper;
 	
 	/**
-	 * Get all {@link UserSettings} of the authenticated {@link User}
+	 * Get all {@link UserApplicationSettings} of the authenticated {@link User}
 	 * @return
 	 */
 	@RequestMapping(path = BASE_URL, method = RequestMethod.GET)
-	public Collection<UserSettingsVO> getAllByUser(Principal user) throws NotFoundException{
+	public Collection<UserApplicationSettingsVO> getAllByUser(Principal user) throws NotFoundException{
 		String username = authorizationHelper.getUsername(user);
-		Collection<UserSettings> listSettings = userSettingsRepository
+		Collection<UserApplicationSettings> listSettings = userApplicationSettingsRepository
 				.findByUsername(username);
-		Collection<UserSettingsVO> listVOs = new ArrayList<>();
-		for(UserSettings settings : listSettings) {
+		Collection<UserApplicationSettingsVO> listVOs = new ArrayList<>();
+		for(UserApplicationSettings settings : listSettings) {
 			Application application = applicationRepositoy.findByApplicationId(settings.getApplicationId());
 			//not found?
 			if(application == null){
@@ -59,9 +59,10 @@ public class UserSettingsResource {
 			applicationVO.setName(application.getName());
 			applicationVO.setIcon(application.getIcon());
 			//create the settings vo
-			UserSettingsVO vo = new UserSettingsVO();
+			UserApplicationSettingsVO vo = new UserApplicationSettingsVO();
 			vo.setUsername(username);
 			vo.setApplication(applicationVO);
+			vo.setSilent(settings.getSilent());
 			listVOs.add(vo);
 		}
 		return listVOs;

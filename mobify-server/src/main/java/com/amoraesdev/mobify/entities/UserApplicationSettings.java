@@ -10,8 +10,8 @@ import org.springframework.data.cassandra.mapping.Table;
  * Represents {@link Application} settings for an {@link User}
  * @author Alessandro Moraes (alessandro at amoraesdev.com)
  */
-@Table("settings")
-public class UserSettings implements Serializable{
+@Table("user_application_settings")
+public class UserApplicationSettings implements Serializable{
 	
 	private static final long serialVersionUID = 4471808282302862623L;
 
@@ -21,14 +21,17 @@ public class UserSettings implements Serializable{
 	@PrimaryKeyColumn(name="application_id",ordinal = 1,type = PrimaryKeyType.CLUSTERED)
 	private String applicationId;
 	
-	public UserSettings(){
+	private Boolean silent;
+	
+	public UserApplicationSettings(){
 		
 	}
 
-	public UserSettings(String username, String applicationId) {
+	public UserApplicationSettings(String username, String applicationId, Boolean silent) {
 		super();
 		this.username = username;
 		this.applicationId = applicationId;
+		this.silent = silent;
 	}
 
 	public String getUsername() {
@@ -64,7 +67,7 @@ public class UserSettings implements Serializable{
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		UserSettings other = (UserSettings) obj;
+		UserApplicationSettings other = (UserApplicationSettings) obj;
 		if (applicationId == null) {
 			if (other.applicationId != null)
 				return false;
@@ -81,6 +84,14 @@ public class UserSettings implements Serializable{
 	@Override
 	public String toString() {
 		return "ApplicationUserSettings [username=" + username + ", applicationId=" + applicationId + "]";
+	}
+
+	public Boolean getSilent() {
+		return silent;
+	}
+
+	public void setSilent(Boolean silent) {
+		this.silent = silent;
 	}
 	
 }
