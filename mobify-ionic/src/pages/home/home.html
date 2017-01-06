@@ -6,12 +6,16 @@
 
 <ion-content padding>
 	 <ion-list>
-	  <ion-item *ngFor="let app of applications">
+		<ion-item *ngFor="let app of applications" (click)="openApplicationPopover(app,$event)">
 	    <ion-avatar item-left>
 	      <img src="img/avatar-finn.png">
 	    </ion-avatar>
-	    <h2>{{ app.name }}</h2>
-	    <h3>{{ app.lastMessageText }}</h3>
+			<h2>{{ app.name }} {{ app.silent }}</h2>
+			<ion-badge item-right [hidden]="!(app.unreadNotificationsCount > 0)">{{ app.unreadNotificationsCount }}</ion-badge>
+			<ion-note item-right [hidden]="!app.silent">
+				<ion-icon name="notifications-off"></ion-icon>	
+			</ion-note>
+	    <p>{{ app.lastMessageText }}</p>
 	  </ion-item>
 	</ion-list>
 </ion-content>

@@ -9,7 +9,8 @@ export class Application {
   public applicationId:string;
   public name:string;
   public icon:string;
-  public lastMessageText:string;
-  public silent: boolean;
+  public lastNotificationText:string;
+  public unreadNotificationsCount:number = 0;
+  public silent:boolean = false;
   
 }

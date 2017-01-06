@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 
 /**
- * Value Object to represent an User Settings
+ * Value Object to represent a User Application Settings
  * @author Alessandro Moraes (alessandro at amoraesdev.com)
  */
 @JsonIgnoreProperties(ignoreUnknown = true)

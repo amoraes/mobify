@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 
-import { NavController, ToastController, LoadingController, Loading } from 'ionic-angular';
+import { NavController, ToastController, LoadingController, Loading, ViewController, PopoverController, NavParams } from 'ionic-angular';
 
 import { AuthService } from '../../providers/auth.service';
 import { ContentService } from '../../providers/content.service';
@@ -19,7 +19,8 @@ export class HomePage {
     private toastCtrl: ToastController, 
     private loadingCtrl: LoadingController, 
     private authService: AuthService, 
-    private contentService: ContentService
+    private contentService: ContentService,
+    private popoverController: PopoverController
     ) {
     
     //show a welcome message
@@ -49,8 +50,47 @@ export class HomePage {
       this.applications.push(app);
       result = iter.next();
     }
-  }
-   
-   
+  } 
 
+  public openApplicationPopover(application:Application, event):void{
+    let popover = this.popoverController.create(ApplicationSettingsPopover, {
+      callback: (action) => {
+       console.log(action+' '+application.applicationId); 
+       if(action == 'clear'){
+         this.contentService.clearNotifications(application.applicationId);
+         this.updateApplicationsList();
+       }
+       else if(action == 'mute'){
+         this.contentService.muteApplication(application.applicationId);
+            this.updateApplicationsList();
+         }
+      }
+    });
+    popover.present({
+      ev: event,
+    });
+  }
+
+}
+
+@Component({
+  template: `
+    <ion-list>
+      <ion-list-header>Options</ion-list-header>
+      <button ion-item (click)="action('mute')">Mute</button>
+      <button ion-item (click)="action('clear')">Clear</button>
+    </ion-list>
+  `
+})
+export class ApplicationSettingsPopover {
+  callback:any;
+
+  constructor(private viewCtrl: ViewController, private navParams: NavParams) {
+    this.callback = this.navParams.get('callback');
+  }
+
+  action(action:string) {
+    this.callback(action)
+    this.viewCtrl.dismiss();
+  }
 }

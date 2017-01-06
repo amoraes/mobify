@@ -38,7 +38,7 @@ export class ApplicationService extends BasicService {
   public getAll(): Promise<Application[]>{
     let headers = new Headers();
     headers.append("Authorization", "Bearer " + this.authService.getUser().accessToken);
-    return this.http.get(CONFIG.mobify_api_base_url + "/user/settings", { headers: headers })
+    return this.http.get(CONFIG.mobify_api_base_url + "/user/applications/settings", { headers: headers })
     .toPromise()
     .then(
       res => {
@@ -53,6 +53,19 @@ export class ApplicationService extends BasicService {
       }
     )
     .catch(this.handleError);
+  }
+
+  /**
+   * Update application settings
+   */
+  public updateApplicationSettings(applicationId:string, silent:boolean): void{
+    let headers = new Headers();
+    headers.append("Authorization", "Bearer " + this.authService.getUser().accessToken);
+    this.http.put(CONFIG.mobify_api_base_url + "/user/applications/"+applicationId+"/settings", 
+                    { silent: silent },
+                    { headers: headers })
+                  .toPromise()  
+                  .catch(this.handleError);  
   }
   
 }

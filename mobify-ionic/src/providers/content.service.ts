@@ -47,8 +47,21 @@ export class ContentService extends BasicService{
             let notificationsArray: Notification[];
             if(jsonArray != null){
                  notificationsArray = JSON.parse(jsonArray);
-                 //set the last message
-                 this.applications.get(appSettings.applicationId).lastMessageText = notificationsArray[notificationsArray.length-1].message;
+                 //it could be cleared by the user
+                 if(notificationsArray.length > 0){
+                    //set the last message
+                    let app:Application = this.applications.get(appSettings.applicationId);
+                    app.lastNotificationText = notificationsArray[notificationsArray.length-1].message;
+                    //set the number of unread messages
+                    let countUnread:number = 0;
+                    for(let n of notificationsArray){
+                      if(n.read != true){
+                        countUnread++;
+                      }
+                    }
+                    app.unreadNotificationsCount = countUnread;
+                 }
+                 
             }else{
                 //if the app does not have any notifications, create a new array to store them
                 notificationsArray = new Array();
@@ -86,7 +99,9 @@ export class ContentService extends BasicService{
   public receiveNotification(notification: Notification): void{
     //put them in the array
     this.notifications.get(notification.applicationId).push(notification);
-    this.applications.get(notification.applicationId).lastMessageText = notification.message;
+    let app:Application = this.applications.get(notification.applicationId);
+    app.lastNotificationText = notification.message;
+    app.unreadNotificationsCount++;
   }
 
   /**
@@ -103,6 +118,35 @@ export class ContentService extends BasicService{
       console.log('Stored locally '+notificationsArray.length+' notifications ('+applicationId+')');
       result = iter.next();
     }
+  }
+
+  /**
+   * Clear all the notifications of an application
+   */
+  public clearNotifications(applicationId:string): void {
+    //clear application settings (unread and last message)
+    let app:Application = this.applications.get(applicationId);
+    app.unreadNotificationsCount = 0;
+    app.lastNotificationText = '';
+    //clear the notifications
+    let emptyArray:Notification[] = new Array();
+    //clear the array
+    this.notifications.set(applicationId, emptyArray);
+    //clear the local storage
+    this.storage.set('notifications_'+applicationId, JSON.stringify(emptyArray));
+  }
+
+  /**
+   * Toogle mute an application
+   */
+  public muteApplication(applicationId:string): void {
+    let app:Application = this.applications.get(applicationId);
+    if(app.silent){ //unmute
+      app.silent = false;
+    }else{ //mute
+      app.silent = true;
+    }
+    this.applicationService.updateApplicationSettings(applicationId, app.silent);
   }
 
 }
