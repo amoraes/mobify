@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { Platform } from 'ionic-angular';
 import { StatusBar, Splashscreen } from 'ionic-native';
+import { Storage } from '@ionic/storage';
 
 import { LoginPage } from '../pages/login/login';
 //global services (singletons)
@@ -11,7 +12,7 @@ import { ApplicationService } from '../providers/application.service';
 
 @Component({
   templateUrl: 'app.html',
-  providers: [AuthService, ContentService, NotificationService, ApplicationService] 
+  providers: [Storage, AuthService, ContentService, NotificationService, ApplicationService] 
 })
 export class MyApp {
   rootPage = LoginPage;

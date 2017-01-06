@@ -10,7 +10,6 @@ export class Application {
   public name:string;
   public icon:string;
   public lastMessageText:string;
-  public notifications: Notification[] = new Array();
   public silent: boolean;
   
 }
