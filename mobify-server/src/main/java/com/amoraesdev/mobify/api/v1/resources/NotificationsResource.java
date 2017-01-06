@@ -165,7 +165,7 @@ public class NotificationsResource {
 			vos.add(vo);
 		});
 		//save the notifications updated with timestampReceived
-		//notificationRepository.save(notifications);
+		notificationRepository.save(notifications);
 		
 		return vos;
 	}
