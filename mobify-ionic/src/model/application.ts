@@ -10,6 +10,7 @@ export class Application {
   public name:string;
   public icon:string;
   public lastNotificationText:string;
+  public lastNotificationTimestamp:Date;
   public unreadNotificationsCount:number = 0;
   public silent:boolean = false;
   

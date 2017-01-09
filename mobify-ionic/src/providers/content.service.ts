@@ -52,6 +52,7 @@ export class ContentService extends BasicService{
                     //set the last message
                     let app:Application = this.applications.get(appSettings.applicationId);
                     app.lastNotificationText = notificationsArray[notificationsArray.length-1].message;
+                    app.lastNotificationTimestamp = notificationsArray[notificationsArray.length-1].timestampSent;
                     //set the number of unread messages
                     let countUnread:number = 0;
                     for(let n of notificationsArray){
@@ -101,6 +102,7 @@ export class ContentService extends BasicService{
     this.notifications.get(notification.applicationId).push(notification);
     let app:Application = this.applications.get(notification.applicationId);
     app.lastNotificationText = notification.message;
+    app.lastNotificationTimestamp = notification.timestampSent;
     app.unreadNotificationsCount++;
   }
 

@@ -50,6 +50,15 @@ export class HomePage {
       this.applications.push(app);
       result = iter.next();
     }
+    console.log(this.applications);
+    //sort by date, descending
+    this.applications.sort(function(a:Application, b:Application){
+      if(a.lastNotificationTimestamp.getTime() > b.lastNotificationTimestamp.getTime()){
+        return 1;
+      }else{
+        return -1;
+      }
+    });
   } 
 
   public openApplicationPopover(application:Application, event):void{
