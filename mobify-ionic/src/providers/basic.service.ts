@@ -9,4 +9,8 @@ export class BasicService {
   public handleError(err){
     console.log(err);
   }
+
+  public parseDate(strDate:string):Date{
+    return new Date(strDate);
+  }
 }

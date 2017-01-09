@@ -13,7 +13,7 @@ import com.datastax.driver.core.Session;
  * @author Alessandro Moraes (alessandro at amoraesdev.com)
  */
 @Configuration
-public class SecondaryIndexesConfig {
+public class CassandraIndexesConfig {
 
 	@Autowired
 	private Session session;

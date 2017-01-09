@@ -7,6 +7,6 @@ import org.springframework.data.cassandra.repository.config.EnableCassandraRepos
  * @author Alessandro Moraes (alessandro at amoraesdev.com)
  */
 @EnableCassandraRepositories
-public class NoSQLConfig {
+public class CassandraConfig {
 
 }

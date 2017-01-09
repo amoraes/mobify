@@ -53,6 +53,7 @@ export class HomePage {
     console.log(this.applications);
     //sort by date, descending
     this.applications.sort(function(a:Application, b:Application){
+      console.log(a);
       if(a.lastNotificationTimestamp.getTime() > b.lastNotificationTimestamp.getTime()){
         return 1;
       }else{

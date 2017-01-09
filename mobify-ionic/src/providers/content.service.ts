@@ -42,36 +42,26 @@ export class ContentService extends BasicService{
       for(let appSettings of allAppSettings){
         this.applications.set(appSettings.applicationId, appSettings);
         //get all the locally stored notifications
-        this.storage.get('notifications_'+appSettings.applicationId).then(
-          jsonArray => {
-            let notificationsArray: Notification[];
-            if(jsonArray != null){
-                 notificationsArray = JSON.parse(jsonArray);
-                 //it could be cleared by the user
-                 if(notificationsArray.length > 0){
-                    //set the last message
-                    let app:Application = this.applications.get(appSettings.applicationId);
-                    app.lastNotificationText = notificationsArray[notificationsArray.length-1].message;
-                    app.lastNotificationTimestamp = notificationsArray[notificationsArray.length-1].timestampSent;
-                    //set the number of unread messages
-                    let countUnread:number = 0;
-                    for(let n of notificationsArray){
-                      if(n.read != true){
-                        countUnread++;
-                      }
-                    }
-                    app.unreadNotificationsCount = countUnread;
-                 }
-                 
-            }else{
-                //if the app does not have any notifications, create a new array to store them
-                notificationsArray = new Array();
+        this.notificationService.getStored(appSettings).then(
+          notificationsArray => {
+            if(notificationsArray.length > 0){
+              //set the last message
+              let app:Application = this.applications.get(appSettings.applicationId);
+              app.lastNotificationText = notificationsArray[notificationsArray.length-1].message;
+              app.lastNotificationTimestamp = notificationsArray[notificationsArray.length-1].timestampSent;
+              //set the number of unread messages
+              let countUnread:number = 0;
+              for(let n of notificationsArray){
+                if(n.read != true){
+                  countUnread++;
+                }
+              }
+              app.unreadNotificationsCount = countUnread;
             }
             this.notifications.set(appSettings.applicationId, notificationsArray);
           }
         );
       }
-      console.log(this.notifications);
       //get all the unreceived messages
       let newMessagesReceived: boolean = false;
       return this.notificationService.getUnreceived()

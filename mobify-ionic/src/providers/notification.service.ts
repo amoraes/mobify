@@ -3,10 +3,13 @@ import { Http, Headers } from '@angular/http';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/toPromise';
 
+import { Storage } from '@ionic/storage';
+
 import { BasicService } from './basic.service';
 import { AuthService } from './auth.service';
 
 import { Notification } from '../model/notification';
+import { Application } from '../model/application';
 
 import { CONFIG } from '../app/config';
 
@@ -16,7 +19,7 @@ import { CONFIG } from '../app/config';
 @Injectable()
 export class NotificationService extends BasicService {
 
-  constructor(private http: Http, private authService: AuthService) {
+  constructor(private http: Http, private storage: Storage, private authService: AuthService) {
     super();
   }
   
@@ -29,7 +32,7 @@ export class NotificationService extends BasicService {
     n.applicationId = obj.applicationId;
     n.type = obj.type;
     n.message = obj.message;
-    n.timestampSent = obj.timestampSent;
+    n.timestampSent = this.parseDate(obj.timestampSent);
     n.read = (obj.timestampRead != null) ? true : false;
     return n;
   }
@@ -58,5 +61,28 @@ export class NotificationService extends BasicService {
     )
     .catch(this.handleError);
   }
-  
+
+  /**
+   * Get all notifications stored locally
+   */
+  public getStored(application: Application): Promise<Notification[]>{
+    //get all the locally stored notifications
+    return this.storage.get('notifications_'+application.applicationId).then(
+      jsonArray => {
+        let notificationsArray: Notification[] = new Array();
+        let objectArray = new Array();
+        if(jsonArray != null){
+              objectArray = JSON.parse(jsonArray);
+              //it could be cleared by the user
+              if(objectArray.length > 0){
+                for(let obj of objectArray){
+                  notificationsArray.push(this.convert(obj));
+                }
+              }                 
+        }
+        return notificationsArray;
+      }
+    );
+  }
+ 
 }
