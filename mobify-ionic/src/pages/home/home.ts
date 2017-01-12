@@ -7,6 +7,8 @@ import { ContentService } from '../../providers/content.service';
 
 import { Application } from '../../model/application';
 
+import { NotificationsPage } from '../notifications/notifications';
+
 @Component({
   selector: 'page-home',
   templateUrl: 'home.html'
@@ -20,7 +22,7 @@ export class HomePage {
     private loadingCtrl: LoadingController, 
     private authService: AuthService, 
     private contentService: ContentService,
-    private popoverController: PopoverController
+    private popoverCtrl: PopoverController
     ) {
     
     //show a welcome message
@@ -62,8 +64,8 @@ export class HomePage {
     });
   } 
 
-  public openApplicationPopover(application:Application, event):void{
-    let popover = this.popoverController.create(ApplicationSettingsPopover, {
+  public openApplicationPopover(application:Application, event):void {
+    let popover = this.popoverCtrl.create(ApplicationSettingsPopover, {
       callback: (action) => {
        console.log(action+' '+application.applicationId); 
        if(action == 'clear'){
@@ -74,10 +76,17 @@ export class HomePage {
          this.contentService.muteApplication(application.applicationId);
             this.updateApplicationsList();
          }
-      }
+      },
+      application: application
     });
     popover.present({
       ev: event,
+    });
+  }
+
+  public viewNotifications(application:Application, event):void {
+    this.navCtrl.push(NotificationsPage, {
+      applicationId: application.applicationId
     });
   }
 
@@ -86,17 +95,19 @@ export class HomePage {
 @Component({
   template: `
     <ion-list>
-      <ion-list-header>Options</ion-list-header>
-      <button ion-item (click)="action('mute')">Mute</button>
+      <ion-list-header>{{ application.name }} Options</ion-list-header>
+      <button ion-item (click)="action('mute')"> {{ application.silent ? 'Unmute' : 'Mute' }} </button>
       <button ion-item (click)="action('clear')">Clear</button>
     </ion-list>
   `
 })
 export class ApplicationSettingsPopover {
-  callback:any;
+  private callback:any;
+  private application:Application;
 
   constructor(private viewCtrl: ViewController, private navParams: NavParams) {
     this.callback = this.navParams.get('callback');
+    this.application = this.navParams.get('application');
   }
 
   action(action:string) {

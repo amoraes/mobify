@@ -4,18 +4,28 @@
   </ion-navbar>
 </ion-header>
 
-<ion-content padding>
+<ion-content no-padding>
 	 <ion-list>
-		<ion-item *ngFor="let app of applications" (click)="openApplicationPopover(app,$event)">
+		<ion-item *ngFor="let app of applications" (click)="viewNotifications(app,$event)" (press)="openApplicationPopover(app,$event)">
 	    <ion-avatar item-left>
 	      <img src="img/avatar-finn.png">
 	    </ion-avatar>
 			<h2>{{ app.name }}</h2>
-			<ion-badge item-right [hidden]="!(app.unreadNotificationsCount > 0)">{{ app.unreadNotificationsCount }}</ion-badge>
-			<ion-note item-right [hidden]="!app.silent">
-				<ion-icon name="notifications-off"></ion-icon>	
-			</ion-note>
-	    <p>{{ app.lastMessageText }}</p>
+			<div item-right>
+				<div text-right>
+					<p>
+					{{ app.getLastTimestampAsString() }}
+					</p>
+				</div>
+				<ion-note>
+					<ion-icon [hidden]="app.silent" name="_space_only_"></ion-icon>	
+					<ion-icon [hidden]="!app.silent" name="notifications-off"></ion-icon>
+					
+				</ion-note>
+				<ion-badge [hidden]="!(app.unreadNotificationsCount > 0)">{{ app.unreadNotificationsCount }}</ion-badge>
+				
+			</div>
+	    <p>{{ app.lastNotificationText }}</p>
 	  </ion-item>
 	</ion-list>
 </ion-content>

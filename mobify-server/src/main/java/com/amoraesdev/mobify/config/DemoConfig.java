@@ -36,6 +36,9 @@ public class DemoConfig {
 	
 	@PostConstruct
 	public void init(){
+		Date today = new Date();
+		Date yesterday = new Date(today.getTime() - 86400000);
+		
 		Application app1 = new Application("mobify","Mobify","icon1");
 		applicationRepository.save(app1);
 		Notification n = new Notification(UUIDs.timeBased(), "user", app1.getApplicationId(), new Date(), "Notice", "Welcome to Mobify! If you received this, our demo is working."); 
@@ -45,7 +48,7 @@ public class DemoConfig {
 		
 		Application app2 = new Application("monitor-checker", "Cluster Monitor", "icon2");
 		applicationRepository.save(app2);
-		n = new Notification(UUIDs.timeBased(), "user", app2.getApplicationId(), new Date(), "Alert", "Server 2 is offline.");
+		n = new Notification(UUIDs.timeBased(), "user", app2.getApplicationId(), yesterday, "Alert", "Server 2 is offline.");
 		notificationRepository.save(n);
 		n = new Notification(UUIDs.timeBased(), "admin", app2.getApplicationId(), new Date(), "Alert", "Server 2 is offline.");
 		notificationRepository.save(n);
@@ -58,7 +61,7 @@ public class DemoConfig {
 		
 		Application app3 = new Application("human-resources", "Human Resources", "icon3");
 		applicationRepository.save(app3);
-		n = new Notification(UUIDs.timeBased(), "user", app3.getApplicationId(), new Date(), "Important", "Your vacation dates has been changed by your supervisor.");
+		n = new Notification(UUIDs.timeBased(), "user", app3.getApplicationId(), yesterday, "Important", "Your vacation dates has been changed by your supervisor.");
 		notificationRepository.save(n);
 		n = new Notification(UUIDs.timeBased(), "user", app3.getApplicationId(), new Date(), "Notice", "Your paylisps are now available.");
 		notificationRepository.save(n);

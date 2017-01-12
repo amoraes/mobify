@@ -4,13 +4,15 @@ import { MyApp } from './app.component';
 //pages
 import { LoginPage } from '../pages/login/login';
 import { HomePage, ApplicationSettingsPopover } from '../pages/home/home';
+import { NotificationsPage } from '../pages/notifications/notifications';
 
 @NgModule({
   declarations: [
     MyApp,
     LoginPage,
     HomePage,
-    ApplicationSettingsPopover
+    ApplicationSettingsPopover,
+    NotificationsPage
   ],
   imports: [
     IonicModule.forRoot(MyApp)
@@ -20,7 +22,8 @@ import { HomePage, ApplicationSettingsPopover } from '../pages/home/home';
     MyApp,
     LoginPage,
     HomePage,
-    ApplicationSettingsPopover
+    ApplicationSettingsPopover,
+    NotificationsPage
   ],
   providers: [
     {provide: ErrorHandler, useClass: IonicErrorHandler } 

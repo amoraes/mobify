@@ -84,6 +84,14 @@ export class ContentService extends BasicService{
     return this.applications.values();
   }
 
+  public getApplicationById(applicationId:string): Application {
+    return this.applications.get(applicationId);
+  }
+
+  public getNotificationsByApplicationId(applicationId:string): Notification[] {
+    return this.notifications.get(applicationId);
+  }
+
   /**
    * Receive a notification
    */

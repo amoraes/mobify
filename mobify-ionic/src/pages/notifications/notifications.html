@@ -1,18 +1,15 @@
-<!--
-  Generated template for the Notifications page.
-
-  See http://ionicframework.com/docs/v2/components/#navigation for more info on
-  Ionic pages and navigation.
--->
 <ion-header>
-
   <ion-navbar>
-    <ion-title>notifications</ion-title>
+    <ion-title>{{ application.name }}</ion-title>
   </ion-navbar>
-
 </ion-header>
-
-
-<ion-content padding>
-
+<ion-content no-padding>
+  <ion-card *ngFor="let notification of notifications">
+    <ion-card-header>
+      {{ notification.type }}
+    </ion-card-header>
+    <ion-card-content>
+      {{ notification.message }}
+    </ion-card-content>
+  </ion-card>
 </ion-content>
