@@ -33,7 +33,6 @@ export class NotificationsPage {
     this.notifications = this.contentService.getNotificationsByApplicationId(applicationId);
     
     //mark unread notifications as read
-    let connectionAvailable = true;
     let allReq = [];
     for(let notification of this.notifications){
       if(notification.read != true){

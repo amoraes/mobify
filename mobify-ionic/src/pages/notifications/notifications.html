@@ -5,17 +5,17 @@
 </ion-header>
 <ion-content no-padding>
   <ion-card *ngFor="let notification of notifications">
-    <ion-card-header>
+    <ion-item>
+
       <ion-row>
         <ion-col>
-          {{ notification.type }}
+          <h2>{{ notification.type }}</h2>
         </ion-col>
         <ion-col right text-right>
-        <ion-icon name='checkmark' [hidden]="!notification.read"></ion-icon>
-          {{ notification.getTimestampSentAsString() }}
+          <p><ion-icon name='checkmark' [hidden]="!notification.read"></ion-icon> {{ notification.getTimestampSentAsString() }}</p>
         </ion-col>
       </ion-row>
-    </ion-card-header>
+    </ion-item>
     <ion-card-content>
       {{ notification.message }}
     </ion-card-content>
