@@ -20,23 +20,22 @@ public class Notification implements Serializable {
 
 	private static final long serialVersionUID = -7930874841951049035L;
 
-	@PrimaryKeyColumn(name = "id", ordinal = 3,type = PrimaryKeyType.CLUSTERED)
+	@PrimaryKeyColumn(name = "id", ordinal = 2, ordering = Ordering.DESCENDING, type = PrimaryKeyType.CLUSTERED)
 	private UUID id;
 	
 	/**
 	 * The {@link User} who will be notified
 	 */
-	@PrimaryKeyColumn(name="username",ordinal = 0,type = PrimaryKeyType.PARTITIONED)
+	@PrimaryKeyColumn(name="username", ordinal = 0, type = PrimaryKeyType.PARTITIONED)
 	private String username;
 	
 	/**
 	 * This is the {@link Application} which originated the notification message
 	 */
-	@PrimaryKeyColumn(name="application_id",ordinal = 1,type = PrimaryKeyType.CLUSTERED)
+	@PrimaryKeyColumn(name="application_id", ordinal = 1, type = PrimaryKeyType.CLUSTERED)
 	private String applicationId;
 	
-	@PrimaryKeyColumn(name = "timestamp_sent",ordinal = 2, 
-			ordering = Ordering.DESCENDING, type = PrimaryKeyType.CLUSTERED)
+	@Column("timestamp_sent")
 	private Date timestampSent;
 	
 	@Indexed("notification_received")

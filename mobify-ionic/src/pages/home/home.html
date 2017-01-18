@@ -13,7 +13,7 @@
 			<h2>{{ app.name }}</h2>
 			<div item-right>
 				<div text-right>
-					<p>
+					<p [hidden]="app.lastNotificationText == null">
 					{{ app.getLastTimestampAsString() }}
 					</p>
 				</div>

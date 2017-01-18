@@ -3,6 +3,7 @@ package com.amoraesdev.mobify;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -131,7 +132,8 @@ public class RepositoriesTests {
 	public void testNotificationRepository() {
 		String appId = "monitor-checker";
 		String username = "alessandro.moraes";
-		Notification notification1 = new Notification(UUIDs.timeBased(), username ,appId, new Date(), true, new Date(), false, null , "Alert", "Server 1 is offline");
+		UUID uuid = UUIDs.timeBased();
+		Notification notification1 = new Notification(uuid, username ,appId, new Date(), true, new Date(), false, null , "Alert", "Server 1 is offline");
 		notification1.setTimestampReceived(new Date()); //this notification has been received by the user already
 		Notification notification2 = new Notification(UUIDs.timeBased(), username ,appId, new Date(), false, null, false, null, "Message", "Server 2 is online");
 		Notification notification3 = new Notification(UUIDs.timeBased(), username ,"other-app", new Date(), false, null, false, null, "Message", "Any message");
@@ -142,6 +144,8 @@ public class RepositoriesTests {
 		
 		List<Notification> listNotReceivedByUsername = notificationRepository.findByUsernameAndNotReceived(username);
 		Assert.assertEquals(2, listNotReceivedByUsername.size());
+		
+		Notification notification = notificationRepository.findByUsernameAndApplicationIdAndId(username, appId, uuid);
 		
 	}
 }

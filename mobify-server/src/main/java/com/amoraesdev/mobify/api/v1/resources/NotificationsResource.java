@@ -6,6 +6,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 import javax.validation.Valid;
 
@@ -179,11 +180,15 @@ public class NotificationsResource {
 	 * @throws NotFoundException 
 	 */
 	@RequestMapping(path = BASE_URL_WITH_APPLICATION_ID + "/{notificationId}/read",method = RequestMethod.PATCH)
-	public void patchByPrimaryKeyAsRead(
+	public void markAsReadByPrimaryKey(
 			@PathVariable("applicationId") String applicationId, 
 			@PathVariable("notificationId") String notificationId,
 			Principal user) throws NotFoundException{
-		Notification notification = notificationRepository.findOne(MapIdGenerator.createNotificationPK(notificationId, authorizationHelper.getUsername(user), applicationId));
+		Notification notification = notificationRepository.findByUsernameAndApplicationIdAndId(
+				authorizationHelper.getUsername(user), 
+				applicationId,
+				UUID.fromString(notificationId));
+				//findOne(MapIdGenerator.createNotificationPK(notificationId, authorizationHelper.getUsername(user), applicationId));
 		//not found?
 		if(notification == null){
 			throw new NotFoundException("error.entity_not_found", "Notification", 

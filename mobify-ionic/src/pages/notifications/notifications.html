@@ -6,7 +6,15 @@
 <ion-content no-padding>
   <ion-card *ngFor="let notification of notifications">
     <ion-card-header>
-      {{ notification.type }}
+      <ion-row>
+        <ion-col>
+          {{ notification.type }}
+        </ion-col>
+        <ion-col right text-right>
+        <ion-icon name='checkmark' [hidden]="!notification.read"></ion-icon>
+          {{ notification.getTimestampSentAsString() }}
+        </ion-col>
+      </ion-row>
     </ion-card-header>
     <ion-card-content>
       {{ notification.message }}

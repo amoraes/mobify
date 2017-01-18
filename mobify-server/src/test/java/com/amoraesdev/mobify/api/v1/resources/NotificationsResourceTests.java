@@ -389,7 +389,7 @@ public class NotificationsResourceTests {
 	 * @throws Exception
 	 */
 	@Test
-	public void testPatchByPrimaryKeyAsRead() throws Exception {
+	public void testMarkAsReadByPrimaryKey() throws Exception {
 		String applicationId = "my-client-id";
 		UUID notificationId = UUIDs.timeBased();
 		String username = "alessandro";
@@ -413,7 +413,7 @@ public class NotificationsResourceTests {
 	 * @throws Exception
 	 */
 	@Test
-	public void testPatchByPrimaryKeyAsReadSecondTime() throws Exception {
+	public void testMarkAsReadByPrimaryKeySecondTime() throws Exception {
 		String applicationId = "my-client-id";
 		UUID notificationId = UUIDs.timeBased();
 		String username = "alessandro";
@@ -437,7 +437,7 @@ public class NotificationsResourceTests {
 	 * @throws Exception
 	 */
 	@Test
-	public void testPatchByPrimaryKeyAsReadNotFound() throws Exception {
+	public void testMarkAsReadByPrimaryKeyNotFound() throws Exception {
 		String applicationId = "my-client-id";
 		UUID notificationId = UUIDs.timeBased();
 		String username = "alessandro";

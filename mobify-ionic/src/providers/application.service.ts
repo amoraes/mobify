@@ -29,6 +29,8 @@ export class ApplicationService extends BasicService {
     app.name = obj.application.name;
     app.icon = obj.application.icon;
     app.silent = obj.silent;
+    app.lastNotificationTimestamp = null;
+    app.lastNotificationText = null;
     return app;
   }
 

@@ -16,6 +16,7 @@ import { NotificationsPage } from '../notifications/notifications';
 export class HomePage {
   
   private applications: Application[] = new Array(); 
+  private loader:Loading;
 
   constructor(private navCtrl: NavController, 
     private toastCtrl: ToastController, 
@@ -33,14 +34,16 @@ export class HomePage {
     toast.present();
     
     //show a message to wait until the server responds with all the unreceived messages
-    let loader:Loading = this.loadingCtrl.create({
+    this.loader = this.loadingCtrl.create({
       content: "Please wait..."
     });
-    loader.present();
+    this.loader.present();
     this.updateApplicationsList();
-    loader.dismissAll();
-    
-    console.log(this.applications);
+
+  }
+
+  ionViewDidLoad() {
+    this.loader.dismissAll();
   }
 
   private updateApplicationsList(): void {
@@ -55,8 +58,9 @@ export class HomePage {
     console.log(this.applications);
     //sort by date, descending
     this.applications.sort(function(a:Application, b:Application){
-      console.log(a);
-      if(a.lastNotificationTimestamp.getTime() > b.lastNotificationTimestamp.getTime()){
+      if(a.lastNotificationTimestamp == null || b.lastNotificationTimestamp == null){
+        return 1;
+      }else if(a.lastNotificationTimestamp.getTime() > b.lastNotificationTimestamp.getTime()){
         return 1;
       }else{
         return -1;
@@ -85,9 +89,20 @@ export class HomePage {
   }
 
   public viewNotifications(application:Application, event):void {
-    this.navCtrl.push(NotificationsPage, {
-      applicationId: application.applicationId
-    });
+    //no notifications in this app
+    if(application.lastNotificationText == null){
+      let toast = this.toastCtrl.create({
+        message: 'No notifications at the moment!',
+        duration: 3000
+      });
+      toast.present();
+    }else{
+      //move to notifications page
+      this.navCtrl.push(NotificationsPage, {
+        applicationId: application.applicationId
+      });
+    }
+    
   }
 
 }

@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs/Rx';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/toPromise';
 
@@ -11,7 +10,6 @@ import { NotificationService } from './notification.service';
 import { ApplicationService } from './application.service';
 
 import { Application } from '../model/application';
-import { ApplicationSettings } from '../model/application-settings';
 import { Notification } from '../model/notification';
 
 /**
@@ -21,9 +19,9 @@ import { Notification } from '../model/notification';
 export class ContentService extends BasicService{
 
   //stores all applications and user settings. Key: applicationId
-  private applications:Map<String,Application>;
+  private applications:Map<string,Application>;
   //stores all notifications received. Key: applicationId
-  private notifications:Map<String,Notification[]>;
+  private notifications:Map<string,Notification[]>;
   
   constructor(private notificationService: NotificationService, 
               private applicationService: ApplicationService, 
@@ -33,47 +31,52 @@ export class ContentService extends BasicService{
   
   public init(): Promise<boolean> {
     console.log('initializing mobify data');
-    this.applications = new Map<String,Application>();
-    this.notifications = new Map<String,Notification[]>();
+    this.applications = new Map<string,Application>();
+    this.notifications = new Map<string,Notification[]>();
 
     //load all app settings online
     return this.applicationService.getAll()
     .then(allAppSettings => {
+      let getAllStored = [];
       for(let appSettings of allAppSettings){
         this.applications.set(appSettings.applicationId, appSettings);
         //get all the locally stored notifications
-        this.notificationService.getStored(appSettings).then(
+        let getStored = this.notificationService.getStored(appSettings);
+        getAllStored.push(getStored);
+        getStored.then(
           notificationsArray => {
             if(notificationsArray.length > 0){
               //set the last message
               let app:Application = this.applications.get(appSettings.applicationId);
               app.lastNotificationText = notificationsArray[notificationsArray.length-1].message;
               app.lastNotificationTimestamp = notificationsArray[notificationsArray.length-1].timestampSent;
-              //set the number of unread messages
-              let countUnread:number = 0;
-              for(let n of notificationsArray){
-                if(n.read != true){
-                  countUnread++;
-                }
-              }
-              app.unreadNotificationsCount = countUnread;
             }
             this.notifications.set(appSettings.applicationId, notificationsArray);
           }
         );
       }
-      //get all the unreceived messages
-      let newMessagesReceived: boolean = false;
-      return this.notificationService.getUnreceived()
-      .then(notifications => {        
-         for(let notification of notifications){
-           this.receiveNotification(notification);
-           newMessagesReceived = true;
-         }   
-         if(newMessagesReceived){
-           this.flushNotifications();
-         }
-         return true;
+      return Promise.all(getAllStored).then(data => {
+        //get all the unreceived messages
+        let newMessagesReceived: boolean = false;
+        return this.notificationService.getUnreceived()
+        .then(notifications => {        
+          for(let notification of notifications){
+            this.receiveNotification(notification);
+            newMessagesReceived = true;
+          }   
+          if(newMessagesReceived){
+            this.flushNotifications();
+          }
+          //before returning, refresh the unread count for every application
+          let appsIterator = this.applications.values();
+          let result = appsIterator.next();
+          while(result.done == false){
+              let app: Application = result.value;
+              this.refreshUnreadCount(app.applicationId);
+              result = appsIterator.next();
+          }
+          return true;
+        });
       });
     })   
     .catch(this.handleError);
@@ -97,27 +100,33 @@ export class ContentService extends BasicService{
    */
   public receiveNotification(notification: Notification): void{
     //put them in the array
-    this.notifications.get(notification.applicationId).push(notification);
+    this.notifications.get(notification.applicationId).unshift(notification);
     let app:Application = this.applications.get(notification.applicationId);
     app.lastNotificationText = notification.message;
     app.lastNotificationTimestamp = notification.timestampSent;
-    app.unreadNotificationsCount++;
   }
 
   /**
-   * Store the notifications on the local storage
+   * Store the notifications from all apps in the local storage
    */
   public flushNotifications(): void{
     let iter = this.notifications.keys();
     let result = iter.next();
     while(result.done == false){
-      let applicationId: String = result.value;
-      let notificationsArray: Notification[] = this.notifications.get(applicationId);
-      let json = JSON.stringify(notificationsArray);
-      this.storage.set('notifications_'+applicationId, json);
-      console.log('Stored locally '+notificationsArray.length+' notifications ('+applicationId+')');
+      let applicationId: string = result.value;
+      this.flushNotificationsByApplicationId(applicationId);
       result = iter.next();
     }
+  }
+
+  /**
+   * Store the notifications from one specific app in the local storage
+   */
+  public flushNotificationsByApplicationId(applicationId:string): void {
+    let notificationsArray: Notification[] = this.notifications.get(applicationId);
+    let json = JSON.stringify(notificationsArray);
+    this.storage.set('notifications_'+applicationId, json);
+    console.log('Stored locally '+notificationsArray.length+' notifications ('+applicationId+')');
   }
 
   /**
@@ -126,8 +135,8 @@ export class ContentService extends BasicService{
   public clearNotifications(applicationId:string): void {
     //clear application settings (unread and last message)
     let app:Application = this.applications.get(applicationId);
-    app.unreadNotificationsCount = 0;
-    app.lastNotificationText = '';
+    this.refreshUnreadCount(applicationId);
+    app.lastNotificationText = null;
     //clear the notifications
     let emptyArray:Notification[] = new Array();
     //clear the array
@@ -147,6 +156,22 @@ export class ContentService extends BasicService{
       app.silent = true;
     }
     this.applicationService.updateApplicationSettings(applicationId, app.silent);
+  }
+
+  /**
+   * refresh unread notifications count for an application
+   */
+  public refreshUnreadCount(applicationId: string): void{
+    let app:Application = this.applications.get(applicationId);
+    let notifications = this.notifications.get(applicationId);
+    let count = 0;
+    for(let notification of notifications){
+      if(notification.read != true){
+        count++;
+      }
+    }
+    app.unreadNotificationsCount = count;
+    console.log('unread count for '+applicationId+' now is '+count);
   }
 
 }

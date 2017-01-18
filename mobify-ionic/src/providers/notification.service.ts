@@ -33,7 +33,7 @@ export class NotificationService extends BasicService {
     n.type = obj.type;
     n.message = obj.message;
     n.timestampSent = this.parseDate(obj.timestampSent);
-    n.read = (obj.timestampRead != null) ? true : false;
+    n.read = (obj.timestampRead != null || obj.read == true) ? true : false;
     return n;
   }
 
@@ -83,6 +83,31 @@ export class NotificationService extends BasicService {
         return notificationsArray;
       }
     );
+  }
+
+  /**
+  * Mark a Notification as read
+  */
+  public markAsRead(notification: Notification): Promise<Boolean>{
+    let headers = new Headers();
+    headers.append("Authorization", "Bearer " + this.authService.getUser().accessToken);
+    console.log(headers);
+    return this.http.patch(
+      CONFIG.mobify_api_base_url 
+      + "/applications/"+notification.applicationId+"/notifications/"+notification.notificationId+"/read", 
+      { },
+      { headers: headers })
+    .toPromise()
+    .then(
+      res => {
+        if(res.status == 200){
+          notification.read = true;
+          return true;
+        }
+        return false;
+      }
+    )
+    .catch(this.handleError);
   }
  
 }
