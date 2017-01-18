@@ -5,8 +5,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.amoraesdev.mobify.entities.UserApplicationSettings;
 import com.amoraesdev.mobify.entities.Notification;
+import com.amoraesdev.mobify.entities.UserApplicationSettings;
 import com.amoraesdev.mobify.repositories.UserApplicationSettingsRepository;
 import com.amoraesdev.mobify.utils.RestErrorsControllerAdvice;
 

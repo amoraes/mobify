@@ -4,8 +4,6 @@ import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.UUID;
 
 import javax.validation.Valid;
@@ -27,7 +25,6 @@ import com.amoraesdev.mobify.entities.User;
 import com.amoraesdev.mobify.exceptions.InvalidEntityException;
 import com.amoraesdev.mobify.exceptions.NotFoundException;
 import com.amoraesdev.mobify.repositories.ApplicationRepository;
-import com.amoraesdev.mobify.repositories.UserApplicationSettingsRepository;
 import com.amoraesdev.mobify.repositories.NotificationRepository;
 import com.amoraesdev.mobify.services.SenderService;
 import com.amoraesdev.mobify.utils.AuthorizationHelper;
