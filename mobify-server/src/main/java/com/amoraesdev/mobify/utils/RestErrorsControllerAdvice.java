@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import com.amoraesdev.mobify.Constants;
-import com.amoraesdev.mobify.exceptions.BusinessLogicException;
 import com.amoraesdev.mobify.exceptions.InvalidEntityException;
 import com.amoraesdev.mobify.exceptions.NotFoundException;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -73,22 +72,6 @@ public class RestErrorsControllerAdvice extends ResponseEntityExceptionHandler
         return ResponseEntity.badRequest().headers(headers).body(error);
 	}
 	
-	/**
-	 * This handler transforms any {@link BusinessLogicException} thrown by controllers into a 400 HTTP response
-	 * @param ex
-	 */
-	@ExceptionHandler(BusinessLogicException.class)
-	public ResponseEntity<?> handleException(BusinessLogicException ex){
-		log.debug("Handling "+ex.getClass().getSimpleName()+":"+ex.getMessage());
-		ErrorResource error = new ErrorResource();
-        error.setCode(ex.getClass().getSimpleName());
-        error.setMessage(messageSource.getMessage(ex.getMessage(), null, null));
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(Constants.APPLICATION_JSON_UTF8);
-        return ResponseEntity.badRequest().headers(headers).body(error);
-	}
-	
-
 	/**
 	 * This handler transforms any {@link InvalidRequestException} thrown by controllers into a 422 HTTP response (Unprocessable Entity)
 	 * @param ex

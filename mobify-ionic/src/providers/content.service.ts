@@ -1,16 +1,26 @@
 import { Injectable } from '@angular/core';
+import { Http, Headers } from '@angular/http';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/toPromise';
 
 import { Storage } from '@ionic/storage';
 
+import {$WebSocket} from 'angular2-websocket/angular2-websocket';
+
 import { BasicService } from './basic.service';
 
 import { NotificationService } from './notification.service';
 import { ApplicationService } from './application.service';
+import { AuthService } from './auth.service';
 
 import { Application } from '../model/application';
 import { Notification } from '../model/notification';
+
+import { CONFIG } from '../app/config';
+
+import * as SockJS from './sockjs.js';
+
+//declare var SockJS:any;
 
 /**
  * This class is a singleton to keep the content of the application synchronized
@@ -22,10 +32,14 @@ export class ContentService extends BasicService{
   private applications:Map<string,Application>;
   //stores all notifications received. Key: applicationId
   private notifications:Map<string,Notification[]>;
+
+  
   
   constructor(private notificationService: NotificationService, 
               private applicationService: ApplicationService, 
-              private storage: Storage) {
+              private storage: Storage,
+              private http: Http,
+              private authService: AuthService) {
     super();
   }
   
@@ -75,7 +89,36 @@ export class ContentService extends BasicService{
               this.refreshUnreadCount(app.applicationId);
               result = appsIterator.next();
           }
-          return true;
+          //obtain a ticket to connect in the websocket
+          let headers = new Headers();
+          headers.append("Authorization", "Bearer " + this.authService.getUser().accessToken);
+          return this.http.get(CONFIG.mobify_ws_base_url + "/ticket", { headers: headers })
+          .toPromise()
+          .then(
+            res => {
+              if(res.status == 200){
+                let wsTicket:string = res.text();
+                //connect to the websocket server
+                let url:string = CONFIG.mobify_ws_base_url + "/notifications?ticket="+wsTicket;
+                
+                var sock = new SockJS(url);
+                sock.onopen = function() {
+                    sock.send('Initializing SockJS connection from Angular2....');
+                };
+
+                sock.onmessage = function(e: any) {
+                    console.log(e.data);
+                };
+
+                sock.onclose = function() {
+                };
+                return true;
+              }else{
+                return false;
+              }
+            }
+          )
+          .catch(this.handleError);
         });
       });
     })   

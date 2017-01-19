@@ -12,6 +12,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
  * @author Alessandro Moraes (alessandro at amoraesdev.com)
  */
 @Configuration
+//@Order(-10)
 @Order(SecurityProperties.ACCESS_OVERRIDE_ORDER)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	
@@ -19,11 +20,22 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	protected void configure(HttpSecurity http) throws Exception {
 		http.authorizeRequests().anyRequest().authenticated();
 	}
+	
+	/*@Override
+	protected void configure(HttpSecurity http) throws Exception {
+		super()
+		//http.requestMatchers().antMatchers("/ws/**");
+		http.
+			authorizeRequests()
+			.antMatchers("/ws/notifications/**").permitAll()
+			.antMatchers("/ws/notifications").permitAll()
+			.anyRequest().authenticated();	
+	}*/
 
 	@Override
 	public void configure(WebSecurity web) throws Exception {
-		//the line below enables unauthenticated access to everything!
-		//web.ignoring().antMatchers("/**");
+		//web.ignoring().antMatchers("/ws/notifications**");
+		web.ignoring().antMatchers("/ws/notifications","/ws/notifications/**");
 	}
 	
 }
