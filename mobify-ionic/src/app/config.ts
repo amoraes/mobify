@@ -15,7 +15,13 @@ export const CONFIG = {
   token_expiration_key: "expires_in",
   token_expiration_type: "seconds", //could be in milliseconds to  
   //mobify restful api base url
-  mobify_api_base_url: "http://localhost:8080/mobify/api/v1", 
-  mobify_ws_base_url: "http://localhost:8080/mobify/ws",
+  mobify_api_base_url: "http://localhost:8080/mobify/api", 
+  //url to obtain a ticket to open a websocket connection
+  mobify_websocket_ticket_url: "http://localhost:8080/mobify/ws/ticket",
+  //websocket url
+  mobify_websocket_url: "ws://localhost:8080/mobify/ws/notifications",
+  //websocket (sockjs) url
+  mobify_websocket_sockjs_url: "http://localhost:8080/mobify/sockjs/notifications",
+
 
 }

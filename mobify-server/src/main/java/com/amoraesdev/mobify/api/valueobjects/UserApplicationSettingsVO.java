@@ -1,4 +1,4 @@
-package com.amoraesdev.mobify.api.v1.valueobjects;
+package com.amoraesdev.mobify.api.valueobjects;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonTypeName;

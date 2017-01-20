@@ -1,34 +1,22 @@
-package com.amoraesdev.mobify.api.v1.valueobjects;
-
-import java.util.Date;
+package com.amoraesdev.mobify.api.valueobjects;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 
 /**
- * Value Object to represent a Notification sent to a user (return values only)
+ * Value Object to represent a new Notification sent to a user (without content)
  * @author Alessandro Moraes (alessandro at amoraesdev.com)
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonTypeName("Notification")
-public class NotificationVO {
+public class NotificationPushVO {
 
 	private String notificationId;
 	
 	private String applicationId;
 	
-	private String type;
-	
-	private String message;
-	
 	private String username;
 	
-	private Date timestampSent;
-	
-	private Date timestampReceived;
-
-	private Date timestampRead;
-
 	public String getNotificationId() {
 		return notificationId;
 	}
@@ -45,22 +33,6 @@ public class NotificationVO {
 		this.applicationId = applicationId;
 	}
 
-	public String getType() {
-		return type;
-	}
-
-	public void setType(String type) {
-		this.type = type;
-	}
-
-	public String getMessage() {
-		return message;
-	}
-
-	public void setMessage(String message) {
-		this.message = message;
-	}
-
 	public String getUsername() {
 		return username;
 	}
@@ -69,29 +41,6 @@ public class NotificationVO {
 		this.username = username;
 	}
 
-	public Date getTimestampSent() {
-		return timestampSent;
-	}
-
-	public void setTimestampSent(Date timestampSent) {
-		this.timestampSent = timestampSent;
-	}
-
-	public Date getTimestampReceived() {
-		return timestampReceived;
-	}
-
-	public void setTimestampReceived(Date timestampReceived) {
-		this.timestampReceived = timestampReceived;
-	}
-
-	public Date getTimestampRead() {
-		return timestampRead;
-	}
-
-	public void setTimestampRead(Date timestampRead) {
-		this.timestampRead = timestampRead;
-	}
 	
 	@Override
 	public int hashCode() {
@@ -109,7 +58,7 @@ public class NotificationVO {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		NotificationVO other = (NotificationVO) obj;
+		NotificationPushVO other = (NotificationPushVO) obj;
 		if (notificationId == null) {
 			if (other.notificationId != null)
 				return false;
@@ -118,10 +67,4 @@ public class NotificationVO {
 		return true;
 	}
 
-	@Override
-	public String toString() {
-		return "NotificationVO [notificationId=" + notificationId + ", username=" + username + ", applicationId=" + applicationId + ", type="
-				+ type + ", message=" + message + "]";
-	}
-	
 }

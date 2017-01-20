@@ -35,7 +35,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	@Override
 	public void configure(WebSecurity web) throws Exception {
 		//web.ignoring().antMatchers("/ws/notifications**");
-		web.ignoring().antMatchers("/ws/notifications","/ws/notifications/**");
+		web.ignoring().antMatchers("/ws/notifications","/ws/notifications/**","/sockjs/notifications","/sockjs/notifications/**");
 	}
 	
 }

@@ -1,4 +1,4 @@
-package com.amoraesdev.mobify.api.v1.resources;
+package com.amoraesdev.mobify.api.resources;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.amoraesdev.mobify.api.v1.valueobjects.ApplicationVO;
+import com.amoraesdev.mobify.api.valueobjects.ApplicationVO;
 import com.amoraesdev.mobify.entities.Application;
 import com.amoraesdev.mobify.exceptions.NotFoundException;
 import com.amoraesdev.mobify.repositories.ApplicationRepository;
@@ -18,7 +18,7 @@ import com.amoraesdev.mobify.repositories.ApplicationRepository;
 @RestController
 public class ApplicationsResource {
 	
-	public static final String BASE_URL = "/api/v1/applications";
+	public static final String BASE_URL = "/api/applications";
 	
 	@Autowired
 	private ApplicationRepository applicationRepositoy;

@@ -1,4 +1,4 @@
-package com.amoraesdev.mobify.api.v1.resources;
+package com.amoraesdev.mobify.api.resources;
 
 import java.security.Principal;
 import java.util.ArrayList;
@@ -11,9 +11,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.amoraesdev.mobify.api.v1.valueobjects.ApplicationVO;
-import com.amoraesdev.mobify.api.v1.valueobjects.UserApplicationSettingsPutVO;
-import com.amoraesdev.mobify.api.v1.valueobjects.UserApplicationSettingsVO;
+import com.amoraesdev.mobify.api.valueobjects.ApplicationVO;
+import com.amoraesdev.mobify.api.valueobjects.UserApplicationSettingsPutVO;
+import com.amoraesdev.mobify.api.valueobjects.UserApplicationSettingsVO;
 import com.amoraesdev.mobify.entities.Application;
 import com.amoraesdev.mobify.entities.User;
 import com.amoraesdev.mobify.entities.UserApplicationSettings;
@@ -29,8 +29,8 @@ import com.amoraesdev.mobify.utils.AuthorizationHelper;
 @RestController
 public class UserApplicationsSettingsResource {
 	
-	public static final String BASE_URL = "/api/v1/user/applications/settings";
-	public static final String BASE_URL_WITH_APPLICATION_ID = "/api/v1/user/applications/{applicationId}/settings";
+	public static final String BASE_URL = "/api/user/applications/settings";
+	public static final String BASE_URL_WITH_APPLICATION_ID = "/api/user/applications/{applicationId}/settings";
 	
 	@Autowired
 	private ApplicationRepository applicationRepositoy;

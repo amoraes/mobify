@@ -13,8 +13,10 @@ import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
+import com.amoraesdev.mobify.api.valueobjects.NotificationPushVO;
 import com.amoraesdev.mobify.entities.Notification;
 import com.amoraesdev.mobify.exceptions.WebSocketNotConnectedException;
+import com.amoraesdev.mobify.utils.JSONUtils;
 
 /**
  * This class allows websocket topic subscription to receive new notifications
@@ -42,6 +44,12 @@ public class WebsocketHandler extends TextWebSocketHandler {
 			activeSessions.put(wsTicket.getUsername(), session);
 			log.info(String.format("User '%s' successfully subscribed to receive new notifications.", wsTicket.getUsername()));
 		}else{
+			log.error("Invalid or expired WebSocket ticket");
+			try {
+				session.close();
+			} catch (IOException e) {
+				log.error("Error closing WebSocket connection", e);
+			}
 			throw new RuntimeException("Invalid or expired ticket sent.");
 		}
     }
@@ -52,15 +60,20 @@ public class WebsocketHandler extends TextWebSocketHandler {
 	 * @throws WebSocketNotConnectedException
 	 */
 	public void sendNotification(Notification notification) throws WebSocketNotConnectedException{
+		//create a notification push object (only pk, without real content for more protection)
+		NotificationPushVO push = new NotificationPushVO();
+		push.setNotificationId(notification.getId().toString());
+		push.setApplicationId(notification.getApplicationId());
+		push.setUsername(notification.getUsername());
+		
 		WebSocketSession session = activeSessions.get(notification.getUsername());
 		if(session == null){
 			throw new WebSocketNotConnectedException();
 		}else{
-			try {
+			try {			
 				session.sendMessage(
 						new TextMessage(
-								"{\"notificationId\": \"" + notification.getId() + "\"," +
-								"\"applicationId\": \"" + notification.getApplicationId() + "\"}"
+								JSONUtils.convertObjectToJson(push)
 							));
 			} catch (IOException e) {
 				throw new RuntimeException("Cannot send websocket message", e);				

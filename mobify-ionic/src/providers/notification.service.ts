@@ -62,6 +62,30 @@ export class NotificationService extends BasicService {
     .catch(this.handleError);
   }
 
+
+  /**
+   * Retrieve a notifications from the backend
+   */
+  public get(notificationId:string, applicationId:string): Promise<Notification>{
+    let headers = new Headers();
+    headers.append("Authorization", "Bearer " + this.authService.getUser().accessToken);
+    return this.http.get(
+      CONFIG.mobify_api_base_url + "/applications/"+applicationId+"/notifications/"+notificationId, 
+      { headers: headers }
+    )
+    .toPromise()
+    .then(
+      res => {
+        if(res.status == 200){
+          return this.convert(res.json());
+        }else{
+          return null;
+        }
+      }
+    )
+    .catch(this.handleError);
+  }
+
   /**
    * Get all notifications stored locally
    */

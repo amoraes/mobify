@@ -51,7 +51,7 @@ public class ClientApplication {
 	}
 	
 	public void sendNotification(String[] users, String type, String message){
-		String url = mobifyServerUrl.concat("/api/v1/applications/%s/notifications");
+		String url = mobifyServerUrl.concat("/applications/%s/notifications");
 		try {
 			ObjectMapper mapper = new ObjectMapper();
 			Notification notification = new Notification(users, type, message);

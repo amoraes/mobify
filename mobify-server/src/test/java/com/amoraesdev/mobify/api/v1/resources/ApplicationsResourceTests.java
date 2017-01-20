@@ -16,6 +16,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import com.amoraesdev.mobify.Constants;
 import com.amoraesdev.mobify.TestHelper;
+import com.amoraesdev.mobify.api.resources.ApplicationsResource;
 import com.amoraesdev.mobify.entities.Application;
 import com.amoraesdev.mobify.repositories.ApplicationRepository;
 import com.amoraesdev.mobify.utils.RestErrorsControllerAdvice;

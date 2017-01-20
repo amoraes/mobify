@@ -20,8 +20,6 @@ import { CONFIG } from '../app/config';
 
 import * as SockJS from './sockjs.js';
 
-//declare var SockJS:any;
-
 /**
  * This class is a singleton to keep the content of the application synchronized
  */
@@ -32,8 +30,8 @@ export class ContentService extends BasicService{
   private applications:Map<string,Application>;
   //stores all notifications received. Key: applicationId
   private notifications:Map<string,Notification[]>;
-
-  
+  //WebSocket connection (Native or SockJS)  
+  private ws: any;
   
   constructor(private notificationService: NotificationService, 
               private applicationService: ApplicationService, 
@@ -92,27 +90,22 @@ export class ContentService extends BasicService{
           //obtain a ticket to connect in the websocket
           let headers = new Headers();
           headers.append("Authorization", "Bearer " + this.authService.getUser().accessToken);
-          return this.http.get(CONFIG.mobify_ws_base_url + "/ticket", { headers: headers })
+          return this.http.get(CONFIG.mobify_websocket_ticket_url, { headers: headers })
           .toPromise()
           .then(
             res => {
               if(res.status == 200){
                 let wsTicket:string = res.text();
-                //connect to the websocket server
-                let url:string = CONFIG.mobify_ws_base_url + "/notifications?ticket="+wsTicket;
-                
-                var sock = new SockJS(url);
-                sock.onopen = function() {
-                    sock.send('Initializing SockJS connection from Angular2....');
-                };
-
-                sock.onmessage = function(e: any) {
-                    console.log(e.data);
-                };
-
-                sock.onclose = function() {
-                };
-                return true;
+                return this.connectWebSocketNative(wsTicket).then(res => {
+                     if(res == true){
+                       return true;
+                     }else{
+                       //try to connect using sockjs
+                       return this.connectSockJs(wsTicket).then(res => {
+                         return res;
+                       });
+                     }
+                });
               }else{
                 return false;
               }
@@ -123,7 +116,48 @@ export class ContentService extends BasicService{
       });
     })   
     .catch(this.handleError);
-     
+  }
+
+  private connectSockJs(ticket:string): Promise<boolean>{
+    return new Promise<boolean>((resolve, reject) => {
+        let url:string = CONFIG.mobify_websocket_sockjs_url + "?ticket="+ticket;
+        this.ws = new SockJS(url);      
+        this.ws.onmessage = function(res: any) {
+            this.retrieveNotificationFromPush(JSON.parse(res.data));
+        };
+        this.ws.onclose = function() {
+          console.log('Cannot connect using SockJS WebSocket.');
+          resolve(false);
+        };
+        this.ws.onopen = function() {
+          console.log('SockJS WebSocket connected successfully.');
+          resolve(true);
+        };
+    });
+  }
+
+  private connectWebSocketNative(ticket:string): Promise<boolean>{
+    return new Promise<boolean>((resolve, reject) => {
+      //connect to the websocket server
+      this.ws = new $WebSocket(CONFIG.mobify_websocket_url+"?ticket="+ticket);
+      this.ws.onOpen(function(){
+        console.log('Native WebSocket connected successfully.');
+        resolve(true);
+      });
+      this.ws.onError(function(){
+        console.log('Cannot connect using Native WebSocket.');
+        resolve(false);
+      });
+      this.ws.getDataStream().subscribe(
+        res => {
+          this.retrieveNotificationFromPush(JSON.parse(res.data));
+        },
+        function(e) { console.log('Error: ' + e.message); },
+        function( ) {  }
+      );
+
+    });
+    
   }
   
   public getApplications(): IterableIterator<Application> {
@@ -139,7 +173,30 @@ export class ContentService extends BasicService{
   }
 
   /**
-   * Receive a notification
+   * Retrieve a notification from the backend, update unread count and flush into local storage
+   */
+  public retrieveNotificationFromPush(obj:any): void {
+
+    let id = obj.notificationId;
+    let appId = obj.applicationId;
+    if(id == null || appId == null){
+      console.log('Cannot retrieve the new notification.');
+      return;
+    }
+    this.notificationService.get(id,appId)
+    .then( 
+      (notification:Notification) => {
+        this.receiveNotification(notification);
+        this.refreshUnreadCount(appId);
+        //TODO verify concurrency problem here
+        this.flushNotificationsByApplicationId(appId);
+      }
+    )
+    .catch(this.handleError);
+  }
+
+  /**
+   * Receive a notification locally
    */
   public receiveNotification(notification: Notification): void{
     //put them in the array
@@ -180,6 +237,7 @@ export class ContentService extends BasicService{
     let app:Application = this.applications.get(applicationId);
     this.refreshUnreadCount(applicationId);
     app.lastNotificationText = null;
+    app.unreadNotificationsCount = 0;
     //clear the notifications
     let emptyArray:Notification[] = new Array();
     //clear the array

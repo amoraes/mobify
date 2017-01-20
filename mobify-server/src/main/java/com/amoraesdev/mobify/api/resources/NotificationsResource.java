@@ -1,4 +1,4 @@
-package com.amoraesdev.mobify.api.v1.resources;
+package com.amoraesdev.mobify.api.resources;
 
 import java.security.Principal;
 import java.util.ArrayList;
@@ -17,8 +17,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.amoraesdev.mobify.api.v1.valueobjects.NotificationPostVO;
-import com.amoraesdev.mobify.api.v1.valueobjects.NotificationVO;
+import com.amoraesdev.mobify.api.valueobjects.NotificationPostVO;
+import com.amoraesdev.mobify.api.valueobjects.NotificationVO;
 import com.amoraesdev.mobify.entities.Application;
 import com.amoraesdev.mobify.entities.Notification;
 import com.amoraesdev.mobify.entities.User;
@@ -38,8 +38,8 @@ import com.datastax.driver.core.utils.UUIDs;
 @RestController
 public class NotificationsResource {
 	
-	public static final String BASE_URL = "/api/v1/notifications";
-	public static final String BASE_URL_WITH_APPLICATION_ID = "/api/v1/applications/{applicationId}/notifications";
+	public static final String BASE_URL = "/api/notifications";
+	public static final String BASE_URL_WITH_APPLICATION_ID = "/api/applications/{applicationId}/notifications";
 	
 	@Autowired
 	private AuthorizationHelper authorizationHelper;

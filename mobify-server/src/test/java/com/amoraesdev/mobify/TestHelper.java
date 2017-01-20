@@ -22,12 +22,6 @@ public class TestHelper {
 		return messageSource;
 	}
 	
-	public static byte[] convertObjectToJsonBytes(Object object) throws IOException {
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
-        return mapper.writeValueAsBytes(object);
-    }
-
 	/**
 	 * Utility class to print the RESTful API return and help debugging during tests
 	 */

@@ -1,17 +1,16 @@
 package com.amoraesdev.mobify.api.v1.resources;
 
-import static com.amoraesdev.mobify.TestHelper.convertObjectToJsonBytes;
-import static org.mockito.Mockito.times;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standaloneSetup;
@@ -34,13 +33,15 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import com.amoraesdev.mobify.Constants;
 import com.amoraesdev.mobify.TestHelper;
-import com.amoraesdev.mobify.api.v1.valueobjects.NotificationPostVO;
+import com.amoraesdev.mobify.api.resources.NotificationsResource;
+import com.amoraesdev.mobify.api.valueobjects.NotificationPostVO;
 import com.amoraesdev.mobify.entities.Application;
 import com.amoraesdev.mobify.entities.Notification;
 import com.amoraesdev.mobify.repositories.ApplicationRepository;
 import com.amoraesdev.mobify.repositories.NotificationRepository;
 import com.amoraesdev.mobify.services.SenderService;
 import com.amoraesdev.mobify.utils.AuthorizationHelper;
+import com.amoraesdev.mobify.utils.JSONUtils;
 import com.amoraesdev.mobify.utils.RestErrorsControllerAdvice;
 import com.datastax.driver.core.utils.UUIDs;
 
@@ -112,7 +113,7 @@ public class NotificationsResourceTests {
 		this.mockMvc
 			.perform(post(BASE_URL_WITH_APPLICATION_ID, "my-client-id")
 					.contentType(Constants.APPLICATION_JSON_UTF8)
-					.content(convertObjectToJsonBytes(postVO))	
+					.content(JSONUtils.convertObjectToJson(postVO))	
 					)
 				.andExpect(status().isOk());
 		//verify if saved and sent two notifications, one for each username
@@ -143,7 +144,7 @@ public class NotificationsResourceTests {
 		this.mockMvc
 			.perform(post(BASE_URL_WITH_APPLICATION_ID, "other-client-id") //sets a different application (master clients are allowed to send notifications in other apps behalf)
 					.contentType(Constants.APPLICATION_JSON_UTF8)
-					.content(convertObjectToJsonBytes(postVO))	
+					.content(JSONUtils.convertObjectToJson(postVO))	
 					)
 				.andExpect(status().isOk());
 		//verify if saved and sent two notifications, one for each username
@@ -168,7 +169,7 @@ public class NotificationsResourceTests {
 		this.mockMvc
 			.perform(post(BASE_URL_WITH_APPLICATION_ID, "my-client-id")
 					.contentType(Constants.APPLICATION_JSON_UTF8)
-					.content(convertObjectToJsonBytes(postVO))	
+					.content(JSONUtils.convertObjectToJson(postVO))	
 					)
 				.andExpect(status().isBadRequest());
 		
@@ -193,7 +194,7 @@ public class NotificationsResourceTests {
 		this.mockMvc
 			.perform(post(BASE_URL_WITH_APPLICATION_ID, "my-client-id")
 					.contentType(Constants.APPLICATION_JSON_UTF8)
-					.content(convertObjectToJsonBytes(postVO))	
+					.content(JSONUtils.convertObjectToJson(postVO))	
 					)
 				.andExpect(status().isUnprocessableEntity());
 		//verify if never saved or sent any notifications
@@ -217,7 +218,7 @@ public class NotificationsResourceTests {
 		this.mockMvc
 			.perform(post(BASE_URL_WITH_APPLICATION_ID, "other-client-id")
 					.contentType(Constants.APPLICATION_JSON_UTF8)
-					.content(convertObjectToJsonBytes(postVO))	
+					.content(JSONUtils.convertObjectToJson(postVO))	
 					)
 				.andExpect(status().isBadRequest());
 		//verify if never saved or sent any notifications
